@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Pulse Fitness — modern fitness studio offering group classes, expert trainers, and flexible membership plans."
+    />
+    <meta name="author" content="Nurudeen Abdulsalam" />
+    <title>Pulse Fitness — Train Smart. Live Strong.</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- ============================================================
+       HEADER + NAVIGATION
+       ============================================================ -->
+    <header class="site-header">
+      <nav class="main-nav" aria-label="Main navigation">
+        <a href="#hero" class="logo" aria-label="Pulse Fitness home">
+          <!-- Inline SVG logo placeholder -->
+          <svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true">
+            <rect width="32" height="32" rx="8" fill="#00E676" />
+            <path
+              d="M8 16 L12 16 L14 10 L18 22 L20 16 L24 16"
+              stroke="#0D1117"
+              stroke-width="2.5"
+              fill="none"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          <span>Pulse Fitness</span>
+        </a>
+        <ul class="nav-list">
+          <li><a href="#classes">Classes</a></li>
+          <li><a href="#trainers">Trainers</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <!-- ============================================================
+       MAIN
+       ============================================================ -->
+    <main>
+      <!-- ============ HERO SECTION ============ -->
+      <section id="hero" class="hero" aria-labelledby="hero-heading">
+        <h1 id="hero-heading">Train Smart. Live Strong.</h1>
+        <p class="tagline">
+          Group classes, expert trainers, and flexible plans — everything you
+          need to build a stronger you.
+        </p>
+        <a href="#pricing" class="btn btn-primary">View Membership Plans</a>
+      </section>
+
+      <!-- ============ CLASS SCHEDULE SECTION ============ -->
+      <section id="classes" class="section" aria-labelledby="classes-heading">
+        <header class="section-header">
+          <h2 id="classes-heading">Class Schedule</h2>
+          <p class="section-subtitle">
+            Weekly sessions led by certified instructors.
+          </p>
+        </header>
+
+        <!-- Class schedule table — styled with CSS Grid -->
+        <table class="schedule-table">
+          <thead>
+            <tr>
+              <th scope="col">Day</th>
+              <th scope="col">Time</th>
+              <th scope="col">Class</th>
+              <th scope="col">Trainer</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Monday</td>
+              <td>07:00</td>
+              <td>Morning HIIT</td>
+              <td>Alex Rivera</td>
+            </tr>
+            <tr>
+              <td>Monday</td>
+              <td>18:30</td>
+              <td>Strength &amp; Conditioning</td>
+              <td>Maya Chen</td>
+            </tr>
+            <tr>
+              <td>Wednesday</td>
+              <td>07:00</td>
+              <td>Yoga Flow</td>
+              <td>Sam Osei</td>
+            </tr>
+            <tr>
+              <td>Wednesday</td>
+              <td>19:00</td>
+              <td>Spin Class</td>
+              <td>Alex Rivera</td>
+            </tr>
+            <tr>
+              <td>Friday</td>
+              <td>17:30</td>
+              <td>Core &amp; Mobility</td>
+              <td>Maya Chen</td>
+            </tr>
+            <tr>
+              <td>Saturday</td>
+              <td>09:00</td>
+              <td>Weekend Bootcamp</td>
+              <td>Sam Osei</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ============ TRAINERS SECTION ============ -->
+      <section id="trainers" class="section" aria-labelledby="trainers-heading">
+        <header class="section-header">
+          <h2 id="trainers-heading">Meet Our Trainers</h2>
+          <p class="section-subtitle">
+            Certified coaches who train with you, not just at you.
+          </p>
+        </header>
+
+        <!-- Trainer cards — styled with CSS Grid -->
+        <div class="trainer-grid">
+          <article class="trainer-card">
+            <img
+              src="images/trainer-alex.jpg"
+              alt="Alex Rivera, HIIT and Spin instructor"
+              width="300"
+              height="300"
+              loading="lazy"
+            />
+            <h3>Alex Rivera</h3>
+            <p class="trainer-specialty">HIIT &amp; Spin</p>
+            <p>
+              Former national track athlete with 8 years of coaching experience.
+              Alex specializes in high-intensity interval training and endurance
+              cycling.
+            </p>
+          </article>
+
+          <article class="trainer-card">
+            <img
+              src="images/trainer-maya.jpg"
+              alt="Maya Chen, Strength and Conditioning coach"
+              width="300"
+              height="300"
+              loading="lazy"
+            />
+            <h3>Maya Chen</h3>
+            <p class="trainer-specialty">Strength &amp; Conditioning</p>
+            <p>
+              Certified strength coach with a background in sports science. Maya
+              helps clients build functional strength through progressive
+              overload and mobility work.
+            </p>
+          </article>
+
+          <article class="trainer-card">
+            <img
+              src="images/trainer-sam.jpg"
+              alt="Sam Osei, Yoga and Mobility instructor"
+              width="300"
+              height="300"
+              loading="lazy"
+            />
+            <h3>Sam Osei</h3>
+            <p class="trainer-specialty">Yoga &amp; Mobility</p>
+            <p>
+              Yoga instructor with 10+ years of practice across Ashtanga and
+              Vinyasa traditions. Sam focuses on breath, alignment, and
+              long-term joint health.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <!-- ============ PRICING SECTION ============ -->
+      <section id="pricing" class="section" aria-labelledby="pricing-heading">
+        <header class="section-header">
+          <h2 id="pricing-heading">Membership Plans</h2>
+          <p class="section-subtitle">Simple pricing. Cancel anytime.</p>
+        </header>
+
+        <!-- Pricing cards — styled with Flexbox -->
+        <div class="pricing-grid">
+          <article class="pricing-card">
+            <h3>Basic</h3>
+            <p class="price">
+              <span class="amount">€29</span>
+              <span class="period">/ month</span>
+            </p>
+            <ul class="features">
+              <li>Access to group classes</li>
+              <li>Locker room &amp; showers</li>
+              <li>Mobile app access</li>
+            </ul>
+            <a href="#contact" class="btn btn-outline">Choose Basic</a>
+          </article>
+
+          <article class="pricing-card pricing-card--featured">
+            <p class="badge">Most Popular</p>
+            <h3>Standard</h3>
+            <p class="price">
+              <span class="amount">€49</span>
+              <span class="period">/ month</span>
+            </p>
+            <ul class="features">
+              <li>Everything in Basic</li>
+              <li>2 personal training sessions</li>
+              <li>Nutrition consultation</li>
+              <li>Priority class booking</li>
+            </ul>
+            <a href="#contact" class="btn btn-primary">Choose Standard</a>
+          </article>
+
+          <article class="pricing-card">
+            <h3>Premium</h3>
+            <p class="price">
+              <span class="amount">€79</span>
+              <span class="period">/ month</span>
+            </p>
+            <ul class="features">
+              <li>Everything in Standard</li>
+              <li>Unlimited personal training</li>
+              <li>Monthly body composition scan</li>
+              <li>Guest passes (2/month)</li>
+            </ul>
+            <a href="#contact" class="btn btn-outline">Choose Premium</a>
+          </article>
+        </div>
+      </section>
+
+      <!-- ============ CONTACT SECTION ============ -->
+      <section id="contact" class="section" aria-labelledby="contact-heading">
+        <header class="section-header">
+          <h2 id="contact-heading">Get in Touch</h2>
+          <p class="section-subtitle">
+            Questions about membership? Send us a message.
+          </p>
+        </header>
+
+        <form class="contact-form" action="#" method="post">
+          <div class="form-group">
+            <label for="name">Full Name</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              placeholder="Your name"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="you@example.com"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="plan">Interested Plan</label>
+            <select id="plan" name="plan">
+              <option value="">Select a plan</option>
+              <option value="basic">Basic — €29/month</option>
+              <option value="standard">Standard — €49/month</option>
+              <option value="premium">Premium — €79/month</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="message">Message</label>
+            <textarea
+              id="message"
+              name="message"
+              rows="4"
+              placeholder="Tell us what you're looking for..."
+            ></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary">Send Message</button>
+        </form>
+      </section>
+    </main>
+
+    <!-- ============================================================
+       FOOTER
+       ============================================================ -->
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <p class="footer-brand">Pulse Fitness</p>
+        <p class="footer-tagline">Train Smart. Live Strong.</p>
+        <nav class="footer-nav" aria-label="Footer navigation">
+          <ul>
+            <li><a href="#classes">Classes</a></li>
+            <li><a href="#trainers">Trainers</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </nav>
+        <p class="copyright">
+          &copy; 2026 Pulse Fitness — Built for Mayerfeld Practicum
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>
