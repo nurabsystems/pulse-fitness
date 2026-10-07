@@ -94,15 +94,24 @@ body {
 }
 
 /* ---------- Container ---------- */
+
 .container {
   width: min(var(--content-width), 100% - 2rem);
   margin-inline: auto;
 }
 
+
+
 /* ---------- Section ---------- */
+
 .section {
-  padding: var(--space-xl) 0;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  /* Dynamically scales between 3rem (48px) on mobile and 5rem (80px) on desktop */
+  padding: clamp(3rem, 6vw, 5rem) var(--space-md);
 }
+
 
 .section-header {
   text-align: center;
@@ -324,11 +333,22 @@ body {
 /* ============================================================
    TRAINER CARDS — CSS Grid
    ============================================================ */
+
+ 
 .trainer-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: var(--space-md);
 }
+
+/*
+.trainer-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  gap: var(--space-md);
+  width: 100%;  
+}
+*/
 
 .trainer-card {
   background-color: var(--dark-soft);
