@@ -53,3 +53,125 @@ ul,
 ol {
   list-style: none;
 }
+
+/* ============================================================
+        CSS Variables
+   ============================================================ */
+:root {
+  /* Colors */
+  --accent: #00E676;         /* Pulse green — energetic */
+  --accent-dark: #00B85C;    /* Hover state */
+  --dark: #0D1117;           /* Background */
+  --dark-soft: #161B22;      /* Card background */
+  --light: #F5F7FA;          /* Text on dark */
+  --neutral: #8B949E;        /* Muted text */
+  --border: #30363D;         /* Subtle borders */
+
+  /* Spacing scale */
+  --space-xs: 0.5rem;
+  --space-sm: 1rem;
+  --space-md: 1.5rem;
+  --space-lg: 2.5rem;
+  --space-xl: 4rem;
+
+  /* Typography */
+  --font-base: 'Inter', sans-serif;
+  --font-size-base: 1rem;
+  --line-height-base: 1.6;
+
+  /* Layout */
+  --content-width: 1100px;
+  --radius: 12px;
+  --transition: 0.3s ease;
+}
+
+/* ---------- Base Body with Dark Theme ---------- */
+body {
+  font-family: var(--font-base);
+  color: var(--light);
+  background-color: var(--dark);
+  line-height: var(--line-height-base);
+}
+
+/* ---------- Container ---------- */
+.container {
+  width: min(var(--content-width), 100% - 2rem);
+  margin-inline: auto;
+}
+
+/* ---------- Section ---------- */
+.section {
+  padding: var(--space-xl) 0;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: var(--space-lg);
+}
+
+.section-header h2 {
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-bottom: var(--space-xs);
+}
+
+.section-subtitle {
+  color: var(--neutral);
+  font-size: 1.05rem;
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-block;
+  padding: 0.85rem 1.75rem;
+  border-radius: var(--radius);
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: transform var(--transition), background var(--transition),
+              color var(--transition), border-color var(--transition);
+}
+
+.btn-primary {
+  background-color: var(--accent);
+  color: var(--dark);
+}
+
+.btn-primary:hover,
+.btn-primary:focus-visible {
+  background-color: var(--accent-dark);
+  transform: translateY(-2px);
+}
+
+.btn-outline {
+  background-color: transparent;
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.btn-outline:hover,
+.btn-outline:focus-visible {
+  background-color: var(--accent);
+  color: var(--dark);
+  transform: translateY(-2px);
+}
+
+/* ---------- Accessibility Focus ---------- */
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ---------- Reduced Motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
