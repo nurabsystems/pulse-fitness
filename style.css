@@ -394,14 +394,7 @@ body {
   gap: var(--space-md);
 }
 
-/*
-.trainer-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
-  gap: var(--space-md);
-  width: 100%;  
-}
-*/
+
 
 .trainer-card {
   background-color: var(--dark-soft);
@@ -420,8 +413,8 @@ body {
 }
 
 .trainer-card img {
-  width: 140px;
-  height: 140px;
+  width: 150px;
+  height: 150px;
   border-radius: 50%;
   object-fit: cover;
   margin: 0 auto var(--space-sm);
