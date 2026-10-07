@@ -330,6 +330,59 @@ body {
   margin-top: var(--space-xs);
 }
 
+
+
+/* ============================================================
+   CLASS SCHEDULE
+   ============================================================ */
+.schedule-table {
+  width: 100%;
+  max-width: 900px;
+  margin-inline: auto;
+  border-collapse: collapse;
+  background-color: var(--dark-soft);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.schedule-table thead {
+  background-color: var(--accent);
+  color: var(--dark);
+}
+
+.schedule-table th,
+.schedule-table td {
+  padding: var(--space-sm) var(--space-md);
+  text-align: left;
+  font-size: 0.95rem;
+}
+
+.schedule-table th {
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+}
+
+.schedule-table tbody tr {
+  border-bottom: 1px solid var(--border);
+  transition: background-color var(--transition);
+}
+
+.schedule-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.schedule-table tbody tr:hover {
+  background-color: rgba(0, 230, 118, 0.05);
+}
+
+.schedule-table td {
+  color: var(--light);
+}
+
+
 /* ============================================================
    TRAINER CARDS — CSS Grid
    ============================================================ */
