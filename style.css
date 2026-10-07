@@ -320,3 +320,59 @@ body {
 .hero .btn {
   margin-top: var(--space-xs);
 }
+
+/* ============================================================
+   TRAINER CARDS — CSS Grid
+   ============================================================ */
+.trainer-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--space-md);
+}
+
+.trainer-card {
+  background-color: var(--dark-soft);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--space-md);
+  text-align: center;
+  transition: transform var(--transition), border-color var(--transition),
+              box-shadow var(--transition);
+}
+
+.trainer-card:hover {
+  transform: translateY(-6px);
+  border-color: var(--accent);
+  box-shadow: 0 12px 32px rgba(0, 230, 118, 0.15);
+}
+
+.trainer-card img {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 0 auto var(--space-sm);
+  border: 3px solid var(--accent);
+}
+
+.trainer-card h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--light);
+  margin-bottom: 0.25rem;
+}
+
+.trainer-specialty {
+  color: var(--accent);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: var(--space-sm);
+}
+
+.trainer-card p {
+  color: var(--neutral);
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
