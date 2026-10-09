@@ -867,3 +867,64 @@ section[id] {
     padding: var(--space-sm);
   }  
 }
+
+/* ============================================================
+   RESPONSIVE TABLE — Card layout on phones
+   ============================================================ */
+
+/* On phone (≤ 600px), transform the table into stacked cards */
+@media (max-width: 600px) {
+
+  /* Hide the table header row */
+  .schedule-table thead {
+    position: absolute;
+    left: -9999px;
+    /* Also visually hidden but screen-reader accessible */
+  }
+
+  /* Make the table, tbody, and rows behave as blocks */
+  .schedule-table,
+  .schedule-table tbody,
+  .schedule-table tr {
+    display: block;
+    width: 100%;
+  }
+
+  /* Each row becomes a card */
+  .schedule-table tr {
+    background-color: var(--dark-soft);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: var(--space-sm) var(--space-md);
+    margin-bottom: var(--space-sm);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  }
+
+  /* Each cell becomes a flex row with label + value */
+  .schedule-table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.95rem;
+    text-align: right;
+  }
+
+  .schedule-table td:last-child {
+    border-bottom: none;
+  }
+
+  /* The label — pulled from data-label */
+  .schedule-table td::before {
+    content: attr(data-label);
+    font-weight: 800;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    text-align: left;
+    margin-right: var(--space-sm);
+    flex-shrink: 0;
+  }
+}
