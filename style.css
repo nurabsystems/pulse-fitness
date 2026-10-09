@@ -777,6 +777,18 @@ section[id] {
   margin-top: var(--space-xs);
 }
 
+/* ============================================================
+   CONTACT SECTION — reduce empty space
+   ============================================================ */
+#contact.section {
+  padding-top: clamp(3rem, 5vw, 4rem);
+  padding-bottom: clamp(3rem, 5vw, 4rem);
+}
+
+#contact .section-header {
+  margin-bottom: var(--space-md);
+}
+
 
 
 /* ============================================================
