@@ -357,6 +357,54 @@ body {
 }
 
 
+/* ============================================================
+   ABOUT SECTION
+   ============================================================ */
+.about-content {
+  max-width: 800px;
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.about-content p {
+  color: var(--neutral);
+  font-size: 1.05rem;
+  line-height: 1.75;
+}
+
+.about-highlights {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding: var(--space-md);
+  background-color: var(--dark-soft);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-top: var(--space-sm);
+}
+
+.about-highlights li {
+  color: var(--light);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  padding-left: 1.5rem;
+  position: relative;
+}
+
+.about-highlights li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-weight: 800;
+}
+
+.about-highlights strong {
+  color: var(--accent);
+}
+
 
 /* ============================================================
    CLASS SCHEDULE
@@ -729,4 +777,12 @@ body {
     max-width: 440px;
     justify-self: center;
   }
+}
+
+@media (max-width: 480px) {
+  .about-highlights {
+    padding: var(--space-sm);
+  }
+
+  
 }
