@@ -110,6 +110,7 @@ body {
   position: relative;
 }
 /* ---------- Section Divider — accent bar ---------- */
+/*
 .section + .section::before {
   content: '';
   position: absolute;
@@ -122,12 +123,16 @@ body {
   border-radius: 2px;
   opacity: 0.7;
 }
-
+*/
 /* ---------- Section Background Alternation ---------- */
 .section:nth-of-type(even) {
   background-color: rgba(22, 27, 34, 0.4);
 }
 
+/* ---------- Anchor Scroll Offset (sticky nav fix) ---------- */
+section[id] {
+  scroll-margin-top: 80px;
+}
 
 
 .section-header {
@@ -411,7 +416,7 @@ body {
    ============================================================ */
 .schedule-table {
   width: 100%;
-  max-width: 900px;
+  max-width: 1000px;
   margin-inline: auto;
   border-collapse: collapse;
   background-color: var(--dark-soft);
@@ -782,7 +787,5 @@ body {
 @media (max-width: 480px) {
   .about-highlights {
     padding: var(--space-sm);
-  }
-
-  
+  }  
 }
