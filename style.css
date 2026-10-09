@@ -281,6 +281,13 @@ body {
 /* ============================================================
    HERO SECTION — Flexbox
    ============================================================ */
+
+@supports not (height: 100svh) {
+  .hero {
+    min-height: calc(100vh - 70px);
+  }
+}
+
 .hero {
   position: relative;
   display: flex;
@@ -288,12 +295,14 @@ body {
   align-items: center;
   justify-content: center;
   gap: var(--space-md);
-  min-height: 80vh;
+  /*min-height: 80vh;*/
+   min-height: calc(100svh - 70px);   /* full viewport MINUS nav height */
   padding: var(--space-xl) var(--space-md);
   text-align: center;
   overflow: hidden;
   isolation: isolate;
 }
+
 
 .hero-media {
   position: absolute;
