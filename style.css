@@ -94,23 +94,40 @@ body {
 }
 
 /* ---------- Container ---------- */
-
+/*
 .container {
   width: min(var(--content-width), 100% - 2rem);
   margin-inline: auto;
 }
+*/
 
-
-
-/* ---------- Section ---------- */
-
+/* ---------- Section Base ---------- */
 .section {
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  /* Dynamically scales between 3rem (48px) on mobile and 5rem (80px) on desktop */
-  padding: clamp(3rem, 6vw, 5rem) var(--space-md);
+  padding: clamp(5rem, 9vw, 8rem) clamp(1.25rem, 5vw, 2.5rem);
+  position: relative;
 }
+/* ---------- Section Divider — accent bar ---------- */
+.section + .section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 64px;
+  height: 3px;
+  background-color: var(--accent);
+  border-radius: 2px;
+  opacity: 0.7;
+}
+
+/* ---------- Section Background Alternation ---------- */
+.section:nth-of-type(even) {
+  background-color: rgba(22, 27, 34, 0.4);
+}
+
 
 
 .section-header {
@@ -685,3 +702,6 @@ body {
   font-size: 0.8rem;
   margin-top: var(--space-sm);
 }
+
+
+
