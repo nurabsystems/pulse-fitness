@@ -283,6 +283,13 @@ section[id] {
 }
 
 
+/* Desktop: nav-list always visible, toggle links hidden */
+.nav-toggle-open,
+.nav-toggle-close {
+  display: none;
+}
+
+
 /* ============================================================
    HERO SECTION — Flexbox
    ============================================================ */
@@ -768,6 +775,77 @@ section[id] {
   margin-top: var(--space-sm);
 }
 
+
+
+/* Mobile */
+@media (max-width: 768px) {
+
+  .main-nav {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.85rem 0;
+    position: relative;
+  }
+
+  /* Show hamburger open button */
+  .nav-toggle-open {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 0.5rem;
+    cursor: pointer;
+  }
+
+  .nav-toggle-open span {
+    display: block;
+    width: 26px;
+    height: 3px;
+    background-color: var(--accent);
+    border-radius: 2px;
+  }
+
+  /* Menu panel hidden by default */
+  .nav-list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+    background-color: var(--dark-soft);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease;
+    width: 100%;
+    z-index: 100;
+  }
+
+  /* When #nav is targeted, expand the menu */
+  .nav-list:target {
+    max-height: 500px;
+  }
+
+  .nav-list li {
+    width: 100%;
+  }
+
+  .nav-list a {
+    display: block;
+    width: 100%;
+    padding: 0.9rem 1.25rem;
+    border-bottom: 1px solid var(--border);
+    font-size: 1rem;
+  }
+
+  .nav-list a::after {
+    display: none;
+  }
+}
 
 
 /* Force single column when width is tight */
