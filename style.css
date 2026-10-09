@@ -790,6 +790,72 @@ section[id] {
 }
 
 
+/* ============================================================
+   CONTACT SECTION — Form + Thank-you toggle
+   ============================================================ */
+
+/* Hide thank-you card by default */
+.thank-you-card {
+  display: none;
+  max-width: 560px;
+  margin: 0 auto;
+  padding: var(--space-lg) var(--space-md);
+  background-color: var(--dark-soft);
+  border: 2px solid var(--accent);
+  border-radius: var(--radius);
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0, 230, 118, 0.15);
+  animation: fadeInUp 0.5s ease;
+}
+
+/* Show thank-you card when targeted */
+.thank-you-card:target {
+  display: block;
+}
+
+/* === BULLETPROOF: hide form when thank-you is targeted === */
+/* Uses :has() — supported in all modern browsers */
+section#contact:has(.thank-you-card:target) .contact-view {
+  display: none;
+}
+
+/* Fallback for browsers without :has() — sibling selector */
+.thank-you-card:target ~ .contact-view {
+  display: none;
+}
+
+/* Icon */
+.thank-you-icon {
+  color: var(--accent);
+  display: flex;
+  justify-content: center;
+  margin-bottom: var(--space-md);
+}
+
+.thank-you-card h2 {
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  color: var(--light);
+  margin-bottom: var(--space-sm);
+  letter-spacing: -0.02em;
+}
+
+.thank-you-card p {
+  color: var(--neutral);
+  font-size: 1.05rem;
+  line-height: 1.7;
+  margin-bottom: var(--space-md);
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.thank-you-card {
+  /* ...existing rules... */
+  scroll-margin-top: 90px;   /* clear the sticky nav */
+}
+
 
 /* ============================================================
    FOOTER

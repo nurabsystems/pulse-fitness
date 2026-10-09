@@ -317,61 +317,103 @@
           </article>
         </div>
       </section>
-
       <!-- ============ CONTACT SECTION ============ -->
       <section id="contact" class="section" aria-labelledby="contact-heading">
-        <header class="section-header">
-          <h2 id="contact-heading">Get in Touch</h2>
-          <p class="section-subtitle">
-            Questions about membership? Send us a message.
+        <!-- Thank-you view (comes FIRST so the ~ selector works) -->
+        <div
+          id="thank-you"
+          class="thank-you-card"
+          role="status"
+          aria-live="polite"
+        >
+          <div class="thank-you-icon" aria-hidden="true">
+            <svg
+              width="64"
+              height="64"
+              viewBox="0 0 64 64"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle
+                cx="32"
+                cy="32"
+                r="30"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="3"
+              />
+              <path
+                d="M20 33 L28 41 L44 24"
+                stroke="currentColor"
+                stroke-width="4"
+                fill="none"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </div>
+          <h2>Thank you!</h2>
+          <p>
+            We've received your message. Our team will get back to you within 24
+            hours.
           </p>
-        </header>
+          <a href="#contact" class="btn btn-outline">Send another message</a>
+        </div>
 
-        <form class="contact-form" action="#" method="post">
-          <div class="form-group">
-            <label for="name">Full Name</label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              placeholder="Your name"
-              required
-            />
-          </div>
+        <!-- Form view (comes AFTER, so it can be hidden by ~) -->
+        <div class="contact-view">
+          <header class="section-header">
+            <h2 id="contact-heading">Get in Touch</h2>
+            <p class="section-subtitle">
+              Questions about membership? Send us a message.
+            </p>
+          </header>
 
-          <div class="form-group">
-            <label for="email">Email</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              placeholder="you@example.com"
-              required
-            />
-          </div>
+          <form class="contact-form" action="#thank-you" method="get">
+            <div class="form-group">
+              <label for="name">Full Name</label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                placeholder="Your name"
+                required
+              />
+            </div>
 
-          <div class="form-group">
-            <label for="plan">Interested Plan</label>
-            <select id="plan" name="plan">
-              <option value="">Select a plan</option>
-              <option value="basic">Basic — €29/month</option>
-              <option value="standard">Standard — €49/month</option>
-              <option value="premium">Premium — €79/month</option>
-            </select>
-          </div>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="you@example.com"
+                required
+              />
+            </div>
 
-          <div class="form-group">
-            <label for="message">Message</label>
-            <textarea
-              id="message"
-              name="message"
-              rows="4"
-              placeholder="Tell us what you're looking for..."
-            ></textarea>
-          </div>
+            <div class="form-group">
+              <label for="plan">Interested Plan</label>
+              <select id="plan" name="plan">
+                <option value="">Select a plan</option>
+                <option value="basic">Basic — €29/month</option>
+                <option value="standard">Standard — €49/month</option>
+                <option value="premium">Premium — €79/month</option>
+              </select>
+            </div>
 
-          <button type="submit" class="btn btn-primary">Send Message</button>
-        </form>
+            <div class="form-group">
+              <label for="message">Message</label>
+              <textarea
+                id="message"
+                name="message"
+                rows="4"
+                placeholder="Tell us what you're looking for..."
+              ></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Send Message</button>
+          </form>
+        </div>
       </section>
     </main>
 
