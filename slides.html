@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pulse Fitness — Presentation</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--accent:#00E676;--dark:#0D1117;--dark-soft:#161B22;--light:#F5F7FA;--neutral:#8B949E;--border:#30363D;--radius:16px}
+html{scroll-behavior:smooth;scroll-snap-type:y mandatory}
+body{font-family:'Inter',sans-serif;background:var(--dark);color:var(--light);line-height:1.6;overflow-x:hidden}
+.slide{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:clamp(2rem,6vw,5rem);scroll-snap-align:start;border-bottom:1px solid var(--border);position:relative;max-width:1400px;margin-inline:auto;width:100%}
+.slide::before{content:'';position:absolute;top:2rem;left:clamp(2rem,6vw,5rem);width:60px;height:4px;background:var(--accent);border-radius:2px}
+.slide-num{position:absolute;top:2rem;right:clamp(2rem,6vw,5rem);color:var(--neutral);font-size:.85rem;font-weight:600;letter-spacing:.1em}
+.eyebrow{color:var(--accent);font-size:.8rem;font-weight:800;text-transform:uppercase;letter-spacing:.2em;margin-bottom:1rem}
+h1{font-size:clamp(2.5rem,7vw,5rem);font-weight:800;line-height:1.05;letter-spacing:-.03em;margin-bottom:1rem}
+h2{font-size:clamp(1.75rem,4vw,2.75rem);font-weight:800;letter-spacing:-.02em;margin-bottom:1.5rem;line-height:1.15}
+h3{font-size:1.15rem;font-weight:700;color:var(--accent);margin-bottom:.5rem;text-transform:uppercase;letter-spacing:.08em}
+p,li{font-size:clamp(1rem,1.6vw,1.2rem);color:var(--neutral)}
+strong{color:var(--light)}
+ul{list-style:none}
+li{padding-left:1.5rem;position:relative;margin-bottom:.6rem}
+li::before{content:'→';position:absolute;left:0;color:var(--accent);font-weight:800}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:2rem}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+.card{background:var(--dark-soft);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem}
+.code-block{background:#000;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:var(--radius);padding:1.5rem;font-family:'JetBrains Mono',monospace;font-size:.9rem;line-height:1.7;overflow-x:auto;color:#E6EDF3}
+.code-block .kw{color:#FF7B72}
+.code-block .str{color:#A5D6FF}
+.code-block .prop{color:#79C0FF}
+.code-block .val{color:var(--accent)}
+.code-block .cmt{color:#6E7681;font-style:italic}
+.title-slide{text-align:center;align-items:center;justify-content:center}
+.title-slide::before{display:none}
+.title-slide h1{font-size:clamp(3rem,10vw,7rem);background:linear-gradient(135deg,var(--light) 30%,var(--accent) 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:1.5rem}
+.tagline{font-size:clamp(1.1rem,2.5vw,1.6rem);color:var(--neutral);margin-bottom:3rem;max-width:700px}
+.meta{color:var(--neutral);font-size:1rem;line-height:1.9}
+.meta strong{color:var(--accent)}
+.stack-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:2rem}
+.stack-item{background:var(--dark-soft);border:1px solid var(--border);border-top:4px solid var(--accent);border-radius:var(--radius);padding:2rem 1.5rem;text-align:center}
+.stack-item .big{font-size:2.5rem;font-weight:800;color:var(--accent);margin-bottom:.5rem}
+.stack-item p{font-size:.95rem;color:var(--light)}
+.cta-slide{text-align:center;align-items:center}
+.cta-slide ul{display:inline-block;text-align:left}
+@media(max-width:768px){.grid-2,.grid-3,.stack-grid{grid-template-columns:1fr}.slide{padding:3rem 1.5rem}}
+</style>
+</head>
+<body>
+
+<!-- 1 — TITLE -->
+<section class="slide title-slide">
+<p class="eyebrow">Mayerfeld Consulting Practicum · Team 7, Group A</p>
+<h1>Pulse Fitness</h1>
+<p class="tagline">A single-page fitness studio website — built with plain HTML5 and CSS3. No frameworks. No JavaScript.</p>
+<p class="meta"><strong>Nurudeen Abdulsalam</strong><br>Tutor: Mr. Farshid Cheraghchian<br>Frontend Development — Week 1 Assignment</p>
+</section>
+
+<!-- 2 — THE BRIEF -->
+<section class="slide">
+<span class="slide-num">02</span>
+<p class="eyebrow">The Brief</p>
+<h2>What was required</h2>
+<div class="grid-2" style="margin-top:2rem">
+<div><h3>Content</h3><ul><li>Class schedule</li><li>Trainer biographies (as cards)</li><li>Membership tiers (as pricing cards)</li></ul></div>
+<div><h3>Technical</h3><ul><li>Single page, responsive</li><li>Plain HTML5 + CSS3</li><li>No frameworks, no JavaScript</li><li>Real Flexbox and real Grid</li><li>No horizontal scroll at any width</li><li>Small, meaningful commits</li></ul></div>
+</div>
+</section>
+
+<!-- 3 — WHAT I BUILT -->
+<section class="slide">
+<span class="slide-num">03</span>
+<p class="eyebrow">What I Built</p>
+<h2>Pulse Fitness — a modern studio site</h2>
+<p style="margin-bottom:2rem;max-width:800px">A dark-themed, single-page website with a neon accent palette. Every section built with semantic HTML and modern CSS.</p>
+<div class="grid-3">
+<div class="card"><h3>6 Sections</h3><p>Hero · About · Classes · Trainers · Pricing · Contact</p></div>
+<div class="card"><h3>CSS-Only Interactivity</h3><p>Hamburger menu and thank-you confirmation using the <strong style="color:var(--accent)">:target</strong> pseudo-class</p></div>
+<div class="card"><h3>Fully Responsive</h3><p>Tested at 320px, 768px, and 1200px. No horizontal scroll anywhere.</p></div>
+</div>
+</section>
+
+<!-- 4 — LIVE DEMO -->
+<section class="slide">
+<span class="slide-num">04</span>
+<p class="eyebrow">Live Demo</p>
+<h2>nurabsystems.github.io/pulse-fitness</h2>
+<ul style="margin-top:2rem;font-size:1.2rem">
+<li><strong>Hero</strong> — background image, tagline, CTA</li>
+<li><strong>About</strong> — two-column Grid with image + text + CTAs</li>
+<li><strong>Class Schedule</strong> — semantic table → stacked cards on phone</li>
+<li><strong>Trainers</strong> — 3 bio cards in a responsive Grid</li>
+<li><strong>Pricing</strong> — 3 tiers using Flexbox, equal height</li>
+<li><strong>Contact</strong> — form with CSS-only thank-you confirmation</li>
+<li><strong>Mobile</strong> — CSS-only hamburger menu</li>
+</ul>
+</section>
+
+<!-- 5 — TECH STACK -->
+<section class="slide">
+<span class="slide-num">05</span>
+<p class="eyebrow">Tech Stack</p>
+<h2>Kept deliberately simple</h2>
+<div class="stack-grid">
+<div class="stack-item"><div class="big">HTML5</div><p>Semantic landmarks, one h1, accessible forms</p></div>
+<div class="stack-item"><div class="big">CSS3</div><p>Flexbox, Grid, custom properties, media queries</p></div>
+<div class="stack-item"><div class="big">0 JS</div><p>No JavaScript anywhere in the project</p></div>
+</div>
+<p style="margin-top:2rem;text-align:center;color:var(--neutral)">Hosted on GitHub Pages · 25+ small commits</p>
+</section>
+
+<!-- 6 — FLEXBOX VS GRID -->
+<section class="slide">
+<span class="slide-num">06</span>
+<p class="eyebrow">Technical Decision 01</p>
+<h2>Flexbox and Grid — deliberate choices</h2>
+<div class="grid-2" style="margin-top:2rem">
+<div class="card"><h3>Flexbox — 1D layouts</h3><ul><li>Header + navigation</li><li>Hero section</li><li>Pricing cards (equal height)</li><li>Footer</li></ul></div>
+<div class="card"><h3>Grid — 2D layouts</h3><ul><li>Trainer bio cards</li><li>About section (two columns)</li><li>Class schedule container</li></ul></div>
+</div>
+<p style="margin-top:2rem;text-align:center;font-size:1.1rem;color:var(--light);font-weight:600">"Flexbox and Grid aren't competitors — they solve different problems."</p>
+</section>
+
+<!-- 7 — CSS VARIABLES -->
+<section class="slide">
+<span class="slide-num">07</span>
+<p class="eyebrow">Technical Decision 02</p>
+<h2>A design system via CSS variables</h2>
+<div class="code-block" style="margin-top:2rem">
+<span class="prop">:root</span> {
+  <span class="prop">--accent</span>: <span class="val">#00E676</span>;       <span class="cmt">/* Pulse green */</span>
+  <span class="prop">--accent-dark</span>: <span class="val">#00B85C</span>;  <span class="cmt">/* Hover state */</span>
+  <span class="prop">--dark</span>: <span class="val">#0D1117</span>;         <span class="cmt">/* Background */</span>
+  <span class="prop">--dark-soft</span>: <span class="val">#161B22</span>;    <span class="cmt">/* Card background */</span>
+  <span class="prop">--light</span>: <span class="val">#F5F7FA</span>;        <span class="cmt">/* Text on dark */</span>
+  <span class="prop">--neutral</span>: <span class="val">#8B949E</span>;      <span class="cmt">/* Muted text */</span>
+  <span class="prop">--border</span>: <span class="val">#30363D</span>;       <span class="cmt">/* Subtle borders */</span>
+}
+</div>
+<p style="margin-top:2rem;color:var(--neutral)">Changing the accent color sitewide: <strong style="color:var(--accent)">one line of code.</strong></p>
+</section>
+
+<!-- 8 — CSS-ONLY INTERACTIVITY -->
+<section class="slide">
+<span class="slide-num">08</span>
+<p class="eyebrow">Technical Decision 03</p>
+<h2>Interactivity without JavaScript</h2>
+<div class="grid-2" style="margin-top:2rem">
+<div><h3>Mobile hamburger menu</h3>
+<div class="code-block" style="font-size:.85rem">
+<span class="cmt">/* HTML */</span>
+&lt;<span class="kw">a</span> <span class="prop">href</span>=<span class="str">"#nav"</span>&gt;☰&lt;/<span class="kw">a</span>&gt;
+&lt;<span class="kw">ul</span> <span class="prop">id</span>=<span class="str">"nav"</span>&gt;...&lt;/<span class="kw">ul</span>&gt;
+
+<span class="cmt">/* CSS */</span>
+.<span class="prop">nav-list</span>:<span class="kw">target</span> {
+  <span class="prop">max-height</span>: <span class="val">500px</span>;
+}
+</div>
+</div>
+<div><h3>Thank-you confirmation</h3>
+<div class="code-block" style="font-size:.85rem">
+<span class="cmt">/* HTML */</span>
+&lt;<span class="kw">form</span> <span class="prop">action</span>=<span class="str">"#thank-you"</span>&gt;
+
+<span class="cmt">/* CSS */</span>
+<span class="prop">#thank-you</span>:<span class="kw">target</span> {
+  <span class="prop">display</span>: <span class="val">block</span>;
+}
+</div>
+</div>
+</div>
+<p style="margin-top:2rem;text-align:center;color:var(--neutral)">Both use the CSS <strong style="color:var(--accent)">:target</strong> pseudo-class — pure HTML and CSS state management.</p>
+</section>
+
+<!-- 9 — CHALLENGE 1 -->
+<section class="slide">
+<span class="slide-num">09</span>
+<p class="eyebrow">Challenge 01</p>
+<h2>Responsive table without horizontal scroll</h2>
+<div class="grid-2" style="margin-top:2rem">
+<div><h3 style="color:#FF7B72">❌ Wrong approach</h3><p>Wrap the table in a scrollable container</p><p style="color:var(--neutral);font-size:.95rem;margin-top:.5rem">Violates the "no horizontal scroll" requirement.</p></div>
+<div><h3>✅ Correct approach</h3><p>Transform each row into a card on phone screens</p>
+<div class="code-block" style="margin-top:.75rem;font-size:.8rem">
+<span class="kw">@media</span> (<span class="prop">max-width</span>: <span class="val">600px</span>) {
+  <span class="prop">tr</span>, <span class="prop">td</span> { <span class="prop">display</span>: <span class="val">block</span>; }
+  <span class="prop">td</span>::<span class="kw">before</span> {
+    <span class="prop">content</span>: <span class="kw">attr</span>(<span class="str">data-label</span>);
+  }
+}
+</div>
+</div>
+</div>
+<p style="margin-top:2rem;text-align:center;color:var(--light)"><strong>Semantic table stays intact.</strong> Mobile gets stacked cards.</p>
+</section>
+
+<!-- 10 — CHALLENGE 2 -->
+<section class="slide">
+<span class="slide-num">10</span>
+<p class="eyebrow">Challenge 02</p>
+<h2>A clean, meaningful Git history</h2>
+<p style="margin-bottom:1.5rem">Planned the commit sequence <strong>before</strong> writing code.</p>
+<div class="code-block">
+<span class="kw">Add</span> HTML5 boilerplate and semantic landmarks
+<span class="kw">Add</span> CSS reset with global box-sizing
+<span class="kw">Add</span> CSS variables for colors and spacing
+<span class="kw">Add</span> Flexbox header with nav links
+<span class="kw">Add</span> class schedule using CSS Grid
+<span class="kw">Add</span> trainer bios as cards using CSS Grid
+<span class="kw">Add</span> membership pricing cards with Flexbox
+<span class="kw">Make</span> schedule table responsive on phones
+<span class="kw">Add</span> CSS-only hamburger menu
+<span class="kw">Add</span> CSS-only thank-you confirmation
+</div>
+<p style="margin-top:1.5rem;text-align:center;color:var(--neutral)"><strong style="color:var(--accent)">25+ commits.</strong> Each one small and reviewable.</p>
+</section>
+
+<!-- 11 — TAKEAWAYS -->
+<section class="slide">
+<span class="slide-num">11</span>
+<p class="eyebrow">Takeaways</p>
+<h2>What I learned</h2>
+<div class="grid-2" style="margin-top:2rem">
+<div class="card"><h3>01 — Structure before style</h3><p>Semantic HTML first means CSS targets meaningful elements.</p></div>
+<div class="card"><h3>02 — Flexbox and Grid are partners</h3><p>Knowing when to use each matters more than knowing how.</p></div>
+<div class="card"><h3>03 — Small commits are a career skill</h3><p>History tells the story of the build.</p></div>
+<div class="card"><h3>04 — CSS can do more than people think</h3><p><strong style="color:var(--accent)">:target</strong> handles state without JavaScript.</p></div>
+</div>
+</section>
+
+<!-- 12 — CLOSING -->
+<section class="slide cta-slide">
+<span class="slide-num">12</span>
+<p class="eyebrow">Thank You</p>
+<h1 style="font-size:clamp(2rem,5vw,4rem);-webkit-text-fill-color:var(--light);background:none;margin-bottom:2rem">Questions?</h1>
+<ul style="font-size:1.2rem">
+<li><strong>Repo:</strong> github.com/nurabsystems/pulse-fitness</li>
+<li><strong>Live site:</strong> nurabsystems.github.io/pulse-fitness</li>
+<li><strong>Built by:</strong> Nurudeen Abdulsalam · Team 7, Group A</li>
+</ul>
+</section>
+
+</body>
+</html>
