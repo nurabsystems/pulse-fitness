@@ -86,7 +86,99 @@ ol {
 }
 
 
+/* ============================================================
+   SETTINGS MENU — CSS-only dropdown
+   ============================================================ */
+.settings-menu {
+  position: relative;
+  margin-left: auto;
+  margin-right: var(--space-sm);
+}
 
+.settings-menu summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 0.4rem;
+  color: var(--neutral);
+  border-radius: 8px;
+  transition: color var(--transition), background-color var(--transition);
+  display: flex;
+  align-items: center;
+}
+
+.settings-menu summary::-webkit-details-marker { display: none; }
+
+.settings-menu summary:hover,
+.settings-menu[open] summary {
+  color: var(--accent);
+  background-color: rgba(0, 230, 118, 0.1);
+}
+
+.settings-panel {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  width: 260px;
+  background-color: var(--dark-soft);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--space-md);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  z-index: 200;
+  animation: fadeInUp 0.25s ease;
+}
+
+.settings-panel h4 {
+  color: var(--light);
+  font-size: 0.85rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: var(--space-md);
+  padding-bottom: var(--space-sm);
+  border-bottom: 1px solid var(--border);
+}
+
+.settings-group { margin-bottom: var(--space-md); }
+.settings-group:last-child { margin-bottom: 0; }
+
+.settings-label {
+  color: var(--neutral);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.25rem;
+}
+
+.settings-value {
+  color: var(--light);
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.settings-badge {
+  display: inline-block;
+  background-color: var(--accent);
+  color: var(--dark);
+  font-size: 0.7rem;
+  font-weight: 800;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  margin-left: 0.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.settings-note {
+  color: var(--neutral);
+  font-size: 0.8rem;
+  font-style: italic;
+  margin-top: 0.25rem;
+}
+
+/* Close on outside click via :focus-within */
+.settings-menu:not([open]) .settings-panel { display: none; }
 
 /* ---------- Base Body with Dark Theme ---------- */
 body {
