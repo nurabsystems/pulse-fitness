@@ -9,13 +9,24 @@
 }
 
 /* ---------- Base Document ---------- */
-html {
-  scroll-behavior: smooth;
-  -webkit-text-size-adjust: 100%;
+
+#hero,
+#about,
+#classes,
+#trainers,
+#pricing,
+#contact,
+#thank-you {
+  scroll-margin-top: 90px;
 }
 
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family:
+    "Inter",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
   font-size: 16px;
   line-height: 1.6;
   color: #111;
@@ -59,13 +70,13 @@ ol {
    ============================================================ */
 :root {
   /* Colors */
-  --accent: #00E676;         /* Pulse green — energetic */
-  --accent-dark: #00B85C;    /* Hover state */
-  --dark: #0D1117;           /* Background */
-  --dark-soft: #161B22;      /* Card background */
-  --light: #F5F7FA;          /* Text on dark */
-  --neutral: #8B949E;        /* Muted text */
-  --border: #30363D;         /* Subtle borders */
+  --accent: #00e676; /* Pulse green — energetic */
+  --accent-dark: #00b85c; /* Hover state */
+  --dark: #0d1117; /* Background */
+  --dark-soft: #161b22; /* Card background */
+  --light: #f5f7fa; /* Text on dark */
+  --neutral: #8b949e; /* Muted text */
+  --border: #30363d; /* Subtle borders */
 
   /* Spacing scale */
   --space-xs: 0.5rem;
@@ -75,7 +86,7 @@ ol {
   --space-xl: 4rem;
 
   /* Typography */
-  --font-base: 'Inter', sans-serif;
+  --font-base: "Inter", sans-serif;
   --font-size-base: 1rem;
   --line-height-base: 1.6;
 
@@ -84,7 +95,6 @@ ol {
   --radius: 12px;
   --transition: 0.3s ease;
 }
-
 
 /* ============================================================
    SETTINGS MENU — CSS-only dropdown
@@ -101,12 +111,16 @@ ol {
   padding: 0.4rem;
   color: var(--neutral);
   border-radius: 8px;
-  transition: color var(--transition), background-color var(--transition);
+  transition:
+    color var(--transition),
+    background-color var(--transition);
   display: flex;
   align-items: center;
 }
 
-.settings-menu summary::-webkit-details-marker { display: none; }
+.settings-menu summary::-webkit-details-marker {
+  display: none;
+}
 
 .settings-menu summary:hover,
 .settings-menu[open] summary {
@@ -139,8 +153,12 @@ ol {
   border-bottom: 1px solid var(--border);
 }
 
-.settings-group { margin-bottom: var(--space-md); }
-.settings-group:last-child { margin-bottom: 0; }
+.settings-group {
+  margin-bottom: var(--space-md);
+}
+.settings-group:last-child {
+  margin-bottom: 0;
+}
 
 .settings-label {
   color: var(--neutral);
@@ -178,7 +196,9 @@ ol {
 }
 
 /* Close on outside click via :focus-within */
-.settings-menu:not([open]) .settings-panel { display: none; }
+.settings-menu:not([open]) .settings-panel {
+  display: none;
+}
 
 /* ---------- Base Body with Dark Theme ---------- */
 body {
@@ -187,14 +207,6 @@ body {
   background-color: var(--dark);
   line-height: var(--line-height-base);
 }
-
-/* ---------- Container ---------- */
-/*
-.container {
-  width: min(var(--content-width), 100% - 2rem);
-  margin-inline: auto;
-}
-*/
 
 /* ---------- Section Base ---------- */
 .section {
@@ -214,7 +226,6 @@ body {
 section[id] {
   scroll-margin-top: 80px;
 }
-
 
 .section-header {
   text-align: center;
@@ -242,8 +253,11 @@ section[id] {
   font-size: 1rem;
   cursor: pointer;
   border: 2px solid transparent;
-  transition: transform var(--transition), background var(--transition),
-              color var(--transition), border-color var(--transition);
+  transition:
+    transform var(--transition),
+    background var(--transition),
+    color var(--transition),
+    border-color var(--transition);
 }
 
 .btn-primary {
@@ -287,8 +301,6 @@ section[id] {
     scroll-behavior: auto !important;
   }
 }
-
-
 
 /* ============================================================
    HEADER + NAVIGATION — Flexbox
@@ -343,7 +355,7 @@ section[id] {
 }
 
 .nav-list a::after {
-  content: '';
+  content: "";
   position: absolute;
   left: 0;
   bottom: -2px;
@@ -363,13 +375,11 @@ section[id] {
   width: 100%;
 }
 
-
 /* Desktop: nav-list always visible, toggle links hidden */
 .nav-toggle-open,
 .nav-toggle-close {
   display: none;
 }
-
 
 /* ============================================================
    HERO SECTION — Flexbox
@@ -389,13 +399,12 @@ section[id] {
   justify-content: center;
   gap: var(--space-md);
   /*min-height: 80vh;*/
-   min-height: calc(100svh - 70px);   /* full viewport MINUS nav height */
+  min-height: calc(100svh - 70px); /* full viewport MINUS nav height */
   padding: var(--space-xl) var(--space-md);
   text-align: center;
   overflow: hidden;
   isolation: isolate;
 }
-
 
 .hero-media {
   position: absolute;
@@ -411,7 +420,7 @@ section[id] {
 }
 
 .hero::before {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
   z-index: -1;
@@ -449,8 +458,6 @@ section[id] {
   margin-top: var(--space-xs);
 }
 
-
-
 /* ============================================================
    ABOUT SECTION — Two-column SaaS layout
    ============================================================ */
@@ -486,7 +493,7 @@ section[id] {
 
 /* Optional accent frame behind the image */
 .about-media::before {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
   border-radius: var(--radius);
@@ -548,7 +555,7 @@ section[id] {
 }
 
 .about-highlights li::before {
-  content: '✓';
+  content: "✓";
   position: absolute;
   left: 0;
   color: var(--accent);
@@ -565,10 +572,6 @@ section[id] {
   gap: var(--space-sm);
   margin-top: var(--space-xs);
 }
-
-
-
-
 
 /* ============================================================
    CLASS SCHEDULE
@@ -620,7 +623,6 @@ section[id] {
   color: var(--light);
 }
 
-
 /* ============================================================
    TRAINER CARDS — CSS Grid
    ============================================================ */
@@ -635,16 +637,16 @@ section[id] {
   justify-items: center;
 }
 
-
-
 .trainer-card {
   background-color: var(--dark-soft);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: var(--space-md);
   text-align: center;
-  transition: transform var(--transition), border-color var(--transition),
-              box-shadow var(--transition);
+  transition:
+    transform var(--transition),
+    border-color var(--transition),
+    box-shadow var(--transition);
 }
 
 .trainer-card:hover {
@@ -709,14 +711,15 @@ section[id] {
   flex-direction: column;
   gap: var(--space-sm);
   position: relative;
-  transition: transform var(--transition), border-color var(--transition);
+  transition:
+    transform var(--transition),
+    border-color var(--transition);
 }
 
 .pricing-card:hover {
   transform: translateY(-6px);
   border-color: var(--accent);
 }
-
 
 .pricing-card--featured {
   border-color: var(--accent);
@@ -732,7 +735,7 @@ section[id] {
 .badge {
   position: absolute;
   top: -12px;
- /* left: 50%;*/
+  /* left: 50%;*/
   transform: translateX(50%);
   background-color: var(--accent);
   color: var(--dark);
@@ -786,7 +789,7 @@ section[id] {
 }
 
 .features li::before {
-  content: '✓';
+  content: "✓";
   position: absolute;
   left: 0;
   color: var(--accent);
@@ -796,7 +799,6 @@ section[id] {
 .pricing-card .btn {
   margin-top: auto;
 }
-
 
 /* ============================================================
    CONTACT SECTION — Form
@@ -837,7 +839,9 @@ section[id] {
   color: var(--light);
   font-size: 0.95rem;
   font-family: inherit;
-  transition: border-color var(--transition), box-shadow var(--transition);
+  transition:
+    border-color var(--transition),
+    box-shadow var(--transition);
 }
 
 .form-group input::placeholder,
@@ -883,7 +887,6 @@ section[id] {
 #contact .section-header {
   margin-bottom: var(--space-md);
 }
-
 
 /* ============================================================
    CONTACT SECTION — Form + Thank-you toggle
@@ -942,15 +945,32 @@ section#contact:has(.thank-you-card:target) .contact-view {
 }
 
 @keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .thank-you-card {
   /* ...existing rules... */
-  scroll-margin-top: 90px;   /* clear the sticky nav */
+  scroll-margin-top: 90px; /* clear the sticky nav */
 }
 
+/* Ensure the contact section handles the absolute/hidden swap smoothly on mobile */
+#contact.section {
+  position: relative;
+  scroll-margin-top: 90px;
+}
+
+/* Fix mobile scroll positioning when #thank-you is targeted */
+#thank-you:target {
+  display: block;
+  scroll-margin-top: 90px;
+}
 
 /* ============================================================
    FOOTER
@@ -1005,11 +1025,8 @@ section#contact:has(.thank-you-card:target) .contact-view {
   margin-top: var(--space-sm);
 }
 
-
-
 /* Mobile */
 @media (max-width: 768px) {
-
   .main-nav {
     flex-direction: row;
     align-items: center;
@@ -1077,7 +1094,6 @@ section#contact:has(.thank-you-card:target) .contact-view {
   }
 }
 
-
 /* Force single column when width is tight */
 @media (max-width: 1100px) and (min-width: 601px) {
   .trainer-grid {
@@ -1095,9 +1111,8 @@ section#contact:has(.thank-you-card:target) .contact-view {
 @media (max-width: 480px) {
   .about-highlights {
     padding: var(--space-sm);
-  }  
+  }
 }
-
 
 /* --- Responsive: stack on tablet and below --- */
 @media (max-width: 900px) {
@@ -1125,8 +1140,24 @@ section#contact:has(.thank-you-card:target) .contact-view {
   }
 }
 
+/* ============================================================
+   SCROLL OFFSET FOR ALL ANCHOR TARGETS
+   ============================================================ */
+#hero,
+#about,
+#classes,
+#trainers,
+#pricing,
+#contact,
+#thank-you {
+  scroll-margin-top: 100px; /* clears the sticky nav */
+}
 
-
+/* Specific fix: thank-you card needs extra offset so it lands fully in view */
+#thank-you {
+  scroll-margin-top: 90px;
+  scroll-margin-bottom: 40px;
+}
 
 /* ============================================================
    RESPONSIVE TABLE — Card layout on phones
@@ -1134,7 +1165,6 @@ section#contact:has(.thank-you-card:target) .contact-view {
 
 /* On phone (≤ 600px), transform the table into stacked cards */
 @media (max-width: 600px) {
-
   /* Hide the table header row */
   .schedule-table thead {
     position: absolute;
