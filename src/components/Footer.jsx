@@ -1,13 +1,13 @@
 // Footer — brand, nav links, copyright.
 
 const links = [
-  { href: '#hero',     label: 'Home' },
-  { href: '#about',    label: 'About' },
-  { href: '#classes',  label: 'Classes' },
-  { href: '#trainers', label: 'Trainers' },
-  { href: '#pricing',  label: 'Pricing' },
-  { href: '#contact',  label: 'Contact' },
-]
+  { href: "#hero", label: "Home" },
+  { href: "#about", label: "About" },
+  { href: "#classes", label: "Classes" },
+  { href: "#trainers", label: "Trainers" },
+  { href: "#pricing", label: "Pricing" },
+  { href: "#contact", label: "Contact" },
+];
 
 export function Footer() {
   return (
@@ -39,5 +39,5 @@ export function Footer() {
         </p>
       </div>
     </footer>
-  )
+  );
 }
