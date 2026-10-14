@@ -12,10 +12,10 @@ export function Hero() {
         <img
           src="/images/hero.jpg"
           alt="Athlete training in a modern fitness studio"
-          className="h-full w-full object-cover brightness-[0.35]"
+          className="h-full w-full object-cover"
         />
-        {/* Gradient overlay — pure visual, no semantic meaning */}
-        <div className="absolute inset-0 bg-gradient-to-b from-zinc-950/60 to-zinc-950/90" />
+        {/* Layered overlay: darker at top and bottom, lighter in middle where text sits */}
+        <div className="absolute inset-0 bg-gradient-to-b from-zinc-950/80 via-zinc-950/50 to-zinc-950/80" />
       </figure>
 
       {/* Foreground content — it's a header for the section */}
@@ -28,8 +28,8 @@ export function Hero() {
         </h1>
 
         <p className="mt-4 text-base text-zinc-200 sm:text-lg md:text-xl">
-          Group classes, expert trainers, and flexible plans —
-          everything you need to keep fit and feel stronger.
+          Group classes, expert trainers, and flexible plans — everything you
+          need to keep fit and feel stronger.
         </p>
 
         <a
@@ -40,5 +40,5 @@ export function Hero() {
         </a>
       </header>
     </section>
-  )
+  );
 }
