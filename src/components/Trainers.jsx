@@ -58,7 +58,7 @@ export function Trainers({ ratings, onRate }) {
         {filtered.map((trainer) => (
           <div
             key={trainer.id}
-            className="w-full sm:w-[calc(50%-0.75rem)] lg:w-[calc(33.333%-1rem)]"
+            className="flex w-full sm:w-[calc(50%-0.75rem)] lg:w-[calc(33.333%-1rem)]"
           >
             <TrainerCard
               trainer={trainer}
