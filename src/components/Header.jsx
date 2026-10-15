@@ -14,7 +14,7 @@ const links = [
   { href: "#contact", label: "Contact" },
 ];
 
-export function Header() {
+export function Header({ userName, onReset }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
@@ -25,7 +25,7 @@ export function Header() {
         </a>
 
         {/* Desktop nav — hidden on mobile */}
-        <ul className="hidden gap-6 sm:flex">
+        <ul className="hidden items-center gap-6 sm:flex">
           {links.map((l) => (
             <li key={l.href}>
               <a
@@ -36,6 +36,23 @@ export function Header() {
               </a>
             </li>
           ))}
+
+          {/* User chip with reset */}
+          {userName && (
+            <li>
+              <button
+                type="button"
+                onClick={onReset}
+                title="Reset and start over"
+                className="flex items-center gap-2 rounded-full border border-zinc-800 px-3 py-1.5 text-xs font-semibold text-zinc-300 transition hover:border-emerald-400 hover:text-emerald-400"
+              >
+                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-400 text-[10px] font-bold text-black">
+                  {userName.charAt(0).toUpperCase()}
+                </span>
+                {userName}
+              </button>
+            </li>
+          )}
         </ul>
 
         {/* Hamburger — hidden on desktop, shown on mobile */}
@@ -93,6 +110,25 @@ export function Header() {
               </a>
             </li>
           ))}
+
+          {userName && (
+            <li className="mt-2 border-t border-zinc-800 pt-3">
+              <button
+                type="button"
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  onReset();
+                }}
+                className="flex w-full items-center gap-2 text-sm font-semibold text-zinc-300"
+              >
+                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-400 text-[11px] font-bold text-black">
+                  {userName.charAt(0).toUpperCase()}
+                </span>
+                {userName}
+                <span className="ml-auto text-xs text-zinc-500">Reset</span>
+              </button>
+            </li>
+          )}
         </ul>
       )}
     </header>

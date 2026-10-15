@@ -1,6 +1,6 @@
 // Hero — the top section with headline and CTA
 
-export function Hero() {
+export function Hero({ userName }) {
   return (
     <section
       id="hero"
@@ -19,13 +19,20 @@ export function Hero() {
       </figure>
 
       {/* Foreground content — it's a header for the section */}
-      <header className="relative z-10 mx-auto max-w-3xl text-center">
-        <h1
-          id="hero-heading"
-          className="text-4xl font-extrabold leading-tight tracking-tight text-white sm:text-5xl md:text-6xl"
-        >
-          Train Smart. Live Strong.
-        </h1>
+     <header className="relative z-10 mx-auto max-w-3xl text-center">
+  {/* Personalized welcome — only shown if userName is passed */}
+  {userName && (
+    <p className="mb-4 text-sm font-bold uppercase tracking-widest text-emerald-400">
+      Welcome back, {userName}
+    </p>
+  )}
+
+  <h1
+    id="hero-heading"
+    className="text-4xl font-extrabold leading-tight tracking-tight text-white sm:text-5xl md:text-6xl"
+  >
+    Train Smart. Live Strong.
+  </h1>
 
         <p className="mt-4 text-base text-zinc-200 sm:text-lg md:text-xl">
           Group classes, expert trainers, and flexible plans — everything you
