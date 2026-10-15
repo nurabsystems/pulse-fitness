@@ -1,10 +1,14 @@
 @import "tailwindcss";
 
-/* Full-width section dividers */
-section[id]:not(#hero):not(:first-of-type) {
-  border-top: 1px solid rgb(39 39 42);
+/* Section dividers — subtle line between main sections */
+main > section + section {
+  border-top: 1px solid #27272a;
 }
 
+/* Anchor scroll offset for sticky header */
+section[id] {
+  scroll-margin-top: 80px;
+}
 /* Anchor scroll offset for sticky header */
 section[id] {
   scroll-margin-top: 80px;
