@@ -1,24 +1,20 @@
-// TrainerMatch — controls three views: entrance, quiz, result.
-// Parents pass `onMatch(specialty)` to apply the match to the grid.
-// Reset is handled via the `key` prop from the parent (React idiom).
+// TrainerMatch — three views: entrance, quiz, result.
+// Mode is controlled by the parent (Trainers) for cross-component coordination.
 
 import { useState } from 'react'
 import { quizQuestions, getMatchedSpecialty, matchReasons } from '../data/matchQuiz'
 
-export function TrainerMatch({ onMatch }) {
-  // mode: 'entrance' | 'quiz' | 'result'
-  const [mode, setMode] = useState('entrance')
-
-  // Quiz state
+export function TrainerMatch({ onMatch, mode, setMode }) {
   const [step, setStep] = useState(0)
   const [answers, setAnswers] = useState({})
 
-  // ------- Handlers -------
+  // -------------------- Handlers --------------------
 
   function startQuiz() {
     setMode('quiz')
     setStep(0)
     setAnswers({})
+    onMatch(null) // clear any active match
   }
 
   function handleAnswer(questionId, value) {
@@ -40,8 +36,7 @@ export function TrainerMatch({ onMatch }) {
   }
 
   function handleSeeMatch() {
-    const specialty = getMatchedSpecialty(answers)
-    onMatch(specialty) // bubble to parent to apply filter
+    onMatch(getMatchedSpecialty(answers))
   }
 
   function retake() {
@@ -50,7 +45,8 @@ export function TrainerMatch({ onMatch }) {
     setMode('quiz')
   }
 
-  // ------- Render: ENTRANCE -------
+  // -------------------- Render: ENTRANCE --------------------
+
   if (mode === 'entrance') {
     return (
       <div className="mx-auto max-w-2xl rounded-2xl border border-zinc-800 bg-zinc-900 p-8 text-center">
@@ -75,7 +71,8 @@ export function TrainerMatch({ onMatch }) {
     )
   }
 
-  // ------- Render: QUIZ -------
+  // -------------------- Render: QUIZ --------------------
+
   if (mode === 'quiz') {
     const current = quizQuestions[step]
 
@@ -130,7 +127,8 @@ export function TrainerMatch({ onMatch }) {
     )
   }
 
-  // ------- Render: RESULT -------
+  // -------------------- Render: RESULT --------------------
+
   const matched = getMatchedSpecialty(answers)
 
   return (

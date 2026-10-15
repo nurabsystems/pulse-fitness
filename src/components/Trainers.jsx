@@ -1,6 +1,6 @@
 // Trainers — combines the match quiz with a filterable grid.
-// When a specialty is matched, the quiz card is replaced by a match banner.
-// Reset is triggered by passing a new `key` to <TrainerMatch />.
+// When a match is active, the quiz is replaced by a match banner.
+// Filter buttons are hidden during the quiz flow to avoid confusion.
 
 import { useState } from 'react'
 import { trainers } from '../data/trainers'
@@ -11,24 +11,29 @@ const specialties = ['All', 'HIIT', 'Strength', 'Yoga']
 
 export function Trainers({ ratings, onRate, matchedSpecialty, onMatch }) {
   const [filter, setFilter] = useState('All')
-
-  // Reset signal — incrementing this changes the `key` on <TrainerMatch />,
-  // which fully unmounts and remounts it with fresh state.
   const [resetKey, setResetKey] = useState(0)
+
+  // Quiz mode is lifted here so we can hide filters during quiz/result
+  const [quizMode, setQuizMode] = useState('entrance')
 
   // If a match is active, use that specialty. Otherwise use the filter.
   const activeFilter = matchedSpecialty || filter
 
-  const filtered = activeFilter === 'All'
-    ? trainers
-    : trainers.filter((t) => t.specialty === activeFilter)
+  const filtered =
+    activeFilter === 'All'
+      ? trainers
+      : trainers.filter((t) => t.specialty === activeFilter)
 
-  // Clear the match — reset both parent state and quiz state
+  // Clear the match — reset parent state, filter, and quiz
   function handleClearMatch() {
     onMatch(null)
     setFilter('All')
+    setQuizMode('entrance')
     setResetKey((k) => k + 1)
   }
+
+  // Show filters only in the entrance view, and only when no match is active
+  const showFilters = !matchedSpecialty && quizMode === 'entrance'
 
   return (
     <section id="trainers" className="mx-auto max-w-6xl px-4 py-16 sm:py-20">
@@ -41,10 +46,9 @@ export function Trainers({ ratings, onRate, matchedSpecialty, onMatch }) {
         </p>
       </header>
 
-      {/* Quiz or matched-state banner */}
+      {/* Quiz OR matched banner */}
       <div className="mx-auto mt-10 max-w-2xl">
         {matchedSpecialty ? (
-          // When a match is active, show a "matched" banner instead of the quiz
           <div className="rounded-2xl border border-emerald-400/30 bg-emerald-400/5 p-6 text-center">
             <p className="text-xs font-bold uppercase tracking-widest text-emerald-400">
               Your Match
@@ -64,14 +68,17 @@ export function Trainers({ ratings, onRate, matchedSpecialty, onMatch }) {
             </button>
           </div>
         ) : (
-          // Otherwise show the quiz (starts in entrance mode).
-          // The `key` prop forces a full reset when it changes.
-          <TrainerMatch key={resetKey} onMatch={onMatch} />
+          <TrainerMatch
+            key={resetKey}
+            onMatch={onMatch}
+            mode={quizMode}
+            setMode={setQuizMode}
+          />
         )}
       </div>
 
-      {/* Filter buttons — hidden when a match is active */}
-      {!matchedSpecialty && (
+      {/* Filter buttons — hidden during quiz/result or match */}
+      {showFilters && (
         <div className="mt-10 flex flex-wrap justify-center gap-2">
           {specialties.map((s) => (
             <button
@@ -93,7 +100,8 @@ export function Trainers({ ratings, onRate, matchedSpecialty, onMatch }) {
 
       {/* Result count */}
       <p className="mt-6 text-center text-sm text-zinc-500">
-        Showing {filtered.length} {filtered.length === 1 ? 'trainer' : 'trainers'}
+        Showing {filtered.length}{' '}
+        {filtered.length === 1 ? 'trainer' : 'trainers'}
       </p>
 
       {/* Trainer grid */}
