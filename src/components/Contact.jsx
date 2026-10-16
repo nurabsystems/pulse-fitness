@@ -3,7 +3,7 @@
 
 import { useState } from "react";
 
-export function Contact() {
+export function Contact({ userName, onNameCapture }) {
   // One state object holds all form fields
   const [form, setForm] = useState({
     name: "",
@@ -22,6 +22,8 @@ export function Contact() {
 
   function handleSubmit(e) {
     e.preventDefault();
+    // Capture the name for personalization in other sections
+    onNameCapture(form.name)   
     setSubmitted(true);
   }
 
@@ -32,7 +34,9 @@ export function Contact() {
           <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full border-2 border-emerald-400 text-3xl text-emerald-400">
             ✓
           </div>
-          <h2 className="mt-4 text-2xl font-bold text-white">Thank you!</h2>
+          <h2 className="mt-4 text-2xl font-bold text-white">
+            {userName ? `Thank you, ${userName}.` : 'Thank you!'}
+    </h2>
           <p className="mt-2 text-zinc-400">
             We've received your message. Our team will get back to you within 24
             hours.

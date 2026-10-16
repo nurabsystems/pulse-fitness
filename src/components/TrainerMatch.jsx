@@ -1,53 +1,57 @@
 // TrainerMatch — three views: entrance, quiz, result.
 // Mode is controlled by the parent (Trainers) for cross-component coordination.
 
-import { useState } from 'react'
-import { quizQuestions, getMatchedSpecialty, matchReasons } from '../data/matchQuiz'
+import { useState } from "react";
+import {
+  quizQuestions,
+  getMatchedSpecialty,
+  matchReasons,
+} from "../data/matchQuiz";
 
-export function TrainerMatch({ onMatch, mode, setMode }) {
-  const [step, setStep] = useState(0)
-  const [answers, setAnswers] = useState({})
+export function TrainerMatch({ onMatch, mode, setMode, userName }) {
+  const [step, setStep] = useState(0);
+  const [answers, setAnswers] = useState({});
 
   // -------------------- Handlers --------------------
 
   function startQuiz() {
-    setMode('quiz')
-    setStep(0)
-    setAnswers({})
-    onMatch(null) // clear any active match
+    setMode("quiz");
+    setStep(0);
+    setAnswers({});
+    onMatch(null); // clear any active match
   }
 
   function handleAnswer(questionId, value) {
-    setAnswers((prev) => ({ ...prev, [questionId]: value }))
+    setAnswers((prev) => ({ ...prev, [questionId]: value }));
 
     if (step < quizQuestions.length - 1) {
-      setStep((s) => s + 1)
+      setStep((s) => s + 1);
     } else {
-      setMode('result')
+      setMode("result");
     }
   }
 
   function goBack() {
     if (step === 0) {
-      setMode('entrance')
+      setMode("entrance");
     } else {
-      setStep((s) => s - 1)
+      setStep((s) => s - 1);
     }
   }
 
   function handleSeeMatch() {
-    onMatch(getMatchedSpecialty(answers))
+    onMatch(getMatchedSpecialty(answers));
   }
 
   function retake() {
-    setStep(0)
-    setAnswers({})
-    setMode('quiz')
+    setStep(0);
+    setAnswers({});
+    setMode("quiz");
   }
 
   // -------------------- Render: ENTRANCE --------------------
 
-  if (mode === 'entrance') {
+  if (mode === "entrance") {
     return (
       <div className="mx-auto max-w-2xl rounded-2xl border border-zinc-800 bg-zinc-900 p-8 text-center">
         <p className="text-xs font-bold uppercase tracking-widest text-emerald-400">
@@ -68,13 +72,13 @@ export function TrainerMatch({ onMatch, mode, setMode }) {
           Start the match quiz
         </button>
       </div>
-    )
+    );
   }
 
   // -------------------- Render: QUIZ --------------------
 
-  if (mode === 'quiz') {
-    const current = quizQuestions[step]
+  if (mode === "quiz") {
+    const current = quizQuestions[step];
 
     return (
       <div className="mx-auto max-w-2xl rounded-2xl border border-zinc-800 bg-zinc-900 p-8">
@@ -92,7 +96,7 @@ export function TrainerMatch({ onMatch, mode, setMode }) {
               <span
                 key={i}
                 className={`h-1.5 w-8 rounded-full transition ${
-                  i <= step ? 'bg-emerald-400' : 'bg-zinc-700'
+                  i <= step ? "bg-emerald-400" : "bg-zinc-700"
                 }`}
               />
             ))}
@@ -124,12 +128,12 @@ export function TrainerMatch({ onMatch, mode, setMode }) {
           ← Back
         </button>
       </div>
-    )
+    );
   }
 
   // -------------------- Render: RESULT --------------------
 
-  const matched = getMatchedSpecialty(answers)
+  const matched = getMatchedSpecialty(answers);
 
   return (
     <div className="mx-auto max-w-2xl rounded-2xl border border-zinc-800 bg-zinc-900 p-8 text-center">
@@ -137,7 +141,7 @@ export function TrainerMatch({ onMatch, mode, setMode }) {
         Trainer Match
       </p>
       <h3 className="mt-2 text-2xl font-bold text-white sm:text-3xl">
-        Your match is ready
+        {userName ? `Your match is ready, ${userName}.` : "Your match is ready"}
       </h3>
 
       <p className="mt-4 text-sm text-zinc-400">We recommend training with</p>
@@ -166,5 +170,5 @@ export function TrainerMatch({ onMatch, mode, setMode }) {
         </button>
       </div>
     </div>
-  )
+  );
 }

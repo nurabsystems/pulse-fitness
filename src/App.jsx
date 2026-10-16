@@ -1,7 +1,4 @@
-// App.jsx — root component
-// Holds top-level state (ratings, matched specialty) and composes all sections.
-
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Header } from './components/Header'
 import { Hero } from './components/Hero'
 import { About } from './components/About'
@@ -11,12 +8,26 @@ import { Pricing } from './components/Pricing'
 import { Contact } from './components/Contact'
 import { Footer } from './components/Footer'
 
-function App() {
-  // Trainer ratings keyed by trainer id: { 'alex-rivera': 5, ... }
-  const [ratings, setRatings] = useState({})
+const STORAGE_KEY = 'pulse-fitness-userName'
 
-  // Matched specialty from the quiz — used to highlight trainers
+function App() {
+  const [ratings, setRatings] = useState({})
   const [matchedSpecialty, setMatchedSpecialty] = useState(null)
+
+  // Read saved name once on mount
+  const [userName, setUserName] = useState(
+    () => localStorage.getItem(STORAGE_KEY) || ''
+  )
+
+  // Track if this is a returning visitor
+  const [isReturning] = useState(
+    () => !!localStorage.getItem(STORAGE_KEY)
+  )
+
+  // Persist name to localStorage whenever it changes
+  useEffect(() => {
+    if (userName) localStorage.setItem(STORAGE_KEY, userName)
+  }, [userName])
 
   function handleRate(trainerId, value) {
     setRatings((prev) => ({ ...prev, [trainerId]: value }))
@@ -26,12 +37,16 @@ function App() {
     setMatchedSpecialty(specialty)
   }
 
+  function handleNameCapture(name) {
+    const trimmed = name?.trim()
+    if (trimmed && trimmed.length >= 2) setUserName(trimmed)
+  }
+
   return (
     <div className="min-h-screen bg-zinc-950 text-white">
-      <Header />
-
+      <Header userName={userName} />
       <main>
-        <Hero />
+        <Hero userName={userName} isReturning={isReturning} />
         <About />
         <Classes />
         <Trainers
@@ -39,11 +54,11 @@ function App() {
           onRate={handleRate}
           matchedSpecialty={matchedSpecialty}
           onMatch={handleMatch}
+          userName={userName}
         />
         <Pricing />
-        <Contact />
+        <Contact userName={userName} onNameCapture={handleNameCapture} />
       </main>
-
       <Footer />
     </div>
   )

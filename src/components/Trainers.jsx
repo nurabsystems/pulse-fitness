@@ -2,38 +2,44 @@
 // When a match is active, the quiz is replaced by a match banner.
 // Filter buttons are hidden during the quiz flow to avoid confusion.
 
-import { useState } from 'react'
-import { trainers } from '../data/trainers'
-import { TrainerCard } from './TrainerCard'
-import { TrainerMatch } from './TrainerMatch'
+import { useState } from "react";
+import { trainers } from "../data/trainers";
+import { TrainerCard } from "./TrainerCard";
+import { TrainerMatch } from "./TrainerMatch";
 
-const specialties = ['All', 'HIIT', 'Strength', 'Yoga']
+const specialties = ["All", "HIIT", "Strength", "Yoga"];
 
-export function Trainers({ ratings, onRate, matchedSpecialty, onMatch }) {
-  const [filter, setFilter] = useState('All')
-  const [resetKey, setResetKey] = useState(0)
+export function Trainers({
+  ratings,
+  onRate,
+  matchedSpecialty,
+  onMatch,
+  userName,
+}) {
+  const [filter, setFilter] = useState("All");
+  const [resetKey, setResetKey] = useState(0);
 
   // Quiz mode is lifted here so we can hide filters during quiz/result
-  const [quizMode, setQuizMode] = useState('entrance')
+  const [quizMode, setQuizMode] = useState("entrance");
 
   // If a match is active, use that specialty. Otherwise use the filter.
-  const activeFilter = matchedSpecialty || filter
+  const activeFilter = matchedSpecialty || filter;
 
   const filtered =
-    activeFilter === 'All'
+    activeFilter === "All"
       ? trainers
-      : trainers.filter((t) => t.specialty === activeFilter)
+      : trainers.filter((t) => t.specialty === activeFilter);
 
   // Clear the match — reset parent state, filter, and quiz
   function handleClearMatch() {
-    onMatch(null)
-    setFilter('All')
-    setQuizMode('entrance')
-    setResetKey((k) => k + 1)
+    onMatch(null);
+    setFilter("All");
+    setQuizMode("entrance");
+    setResetKey((k) => k + 1);
   }
 
   // Show filters only in the entrance view, and only when no match is active
-  const showFilters = !matchedSpecialty && quizMode === 'entrance'
+  const showFilters = !matchedSpecialty && quizMode === "entrance";
 
   return (
     <section id="trainers" className="mx-auto max-w-6xl px-4 py-16 sm:py-20">
@@ -73,6 +79,7 @@ export function Trainers({ ratings, onRate, matchedSpecialty, onMatch }) {
             onMatch={onMatch}
             mode={quizMode}
             setMode={setQuizMode}
+            userName={userName}
           />
         )}
       </div>
@@ -88,8 +95,8 @@ export function Trainers({ ratings, onRate, matchedSpecialty, onMatch }) {
               aria-pressed={filter === s}
               className={`rounded-full px-4 py-1.5 text-sm font-semibold transition-colors ${
                 filter === s
-                  ? 'bg-emerald-400 text-black'
-                  : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+                  ? "bg-emerald-400 text-black"
+                  : "bg-zinc-800 text-zinc-300 hover:bg-zinc-700"
               }`}
             >
               {s}
@@ -100,8 +107,8 @@ export function Trainers({ ratings, onRate, matchedSpecialty, onMatch }) {
 
       {/* Result count */}
       <p className="mt-6 text-center text-sm text-zinc-500">
-        Showing {filtered.length}{' '}
-        {filtered.length === 1 ? 'trainer' : 'trainers'}
+        Showing {filtered.length}{" "}
+        {filtered.length === 1 ? "trainer" : "trainers"}
       </p>
 
       {/* Trainer grid */}
@@ -120,5 +127,5 @@ export function Trainers({ ratings, onRate, matchedSpecialty, onMatch }) {
         ))}
       </div>
     </section>
-  )
+  );
 }

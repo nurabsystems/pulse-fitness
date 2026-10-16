@@ -1,6 +1,6 @@
 // Hero — the top section with headline and CTA
 
-export function Hero({ userName }) {
+export function Hero({ userName, isReturning }) {
   return (
     <section
       id="hero"
@@ -20,12 +20,26 @@ export function Hero({ userName }) {
 
       {/* Foreground content — it's a header for the section */}
      <header className="relative z-10 mx-auto max-w-3xl text-center">
+
   {/* Personalized welcome — only shown if userName is passed */}
   {userName && (
     <p className="mb-4 text-sm font-bold uppercase tracking-widest text-emerald-400">
       Welcome back, {userName}
     </p>
   )}
+
+ {/* Personalized welcome — for returning users */}
+  {userName && isReturning && (
+  <p className="mb-4 text-sm font-bold uppercase tracking-widest text-emerald-400">
+    Welcome back, {userName}. Still moving forward?
+  </p>
+)}
+
+{!isReturning && (
+  <p className="mb-4 text-sm font-bold uppercase tracking-widest text-emerald-400">
+    Welcome to Pulse Fitness
+  </p>
+)}
 
   <h1
     id="hero-heading"
