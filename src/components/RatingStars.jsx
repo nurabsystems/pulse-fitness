@@ -1,12 +1,5 @@
-// RatingStars — a reusable controlled component
-//
-// This component DOES NOT hold its own state. It receives:
-//   - value: the current rating (number)
-//   - onChange: a callback function that runs when a star is clicked
-//   - max: total number of stars (defaults to 5)
-//
-// It's called "controlled" because the PARENT owns the value.
-// This is the same pattern as BrewHaus's QuantityStepper.
+// RatingStars — a reusable controlled component.
+// Receives `value` and `onChange`. Holds no internal state.
 
 export function RatingStars({ value, onChange, max = 5 }) {
   return (
@@ -21,7 +14,7 @@ export function RatingStars({ value, onChange, max = 5 }) {
             type="button"
             onClick={() => onChange(star)}
             aria-label={`Rate ${star} out of ${max}`}
-            className={`text-lg transition-colors ${
+            className={`text-lg leading-none transition-colors ${
               isActive
                 ? 'text-emerald-400'
                 : 'text-zinc-600 hover:text-emerald-300'
