@@ -1,30 +1,43 @@
-// Header — sticky nav with mobile hamburger menu
-//
-// Contains its own useState for the mobile menu toggle.
-// Gets userName and theme props from App.
+// Header — sticky nav with mobile hamburger menu.
+// Receives userName from App for the greeting chip.
 
-import { useState } from "react";
+import { useState } from 'react'
 
 const links = [
-  { href: "#hero", label: "Home" },
-  { href: "#about", label: "About" },
-  { href: "#classes", label: "Classes" },
-  { href: "#trainers", label: "Trainers" },
-  { href: "#pricing", label: "Pricing" },
-  { href: "#contact", label: "Contact" },
-];
+  { href: '#hero',     label: 'Home' },
+  { href: '#about',    label: 'About' },
+  { href: '#classes',  label: 'Classes' },
+  { href: '#trainers', label: 'Trainers' },
+  { href: '#pricing',  label: 'Pricing' },
+  { href: '#contact',  label: 'Contact' },
+]
 
-export function Header({ userName, onReset }) {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+export function Header({ userName }) {
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   return (
     <header className="sticky top-0 z-50 border-b border-zinc-800 bg-zinc-950/80 backdrop-blur">
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
-        <a href="#hero" className="text-lg font-bold text-white">
-          Pulse<span className="text-emerald-400">Fitness</span>
+        <a
+          href="#hero"
+          className="flex items-center gap-2 text-lg font-bold text-white"
+          aria-label="Pulse Fitness — Home"
+        >
+          <svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true">
+            <rect width="32" height="32" rx="8" fill="#00E676" />
+            <path
+              d="M8 16 L12 16 L14 10 L18 22 L20 16 L24 16"
+              stroke="#0D1117"
+              strokeWidth="2.5"
+              fill="none"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+          <span>Pulse<span className="text-emerald-400">Fitness</span></span>
         </a>
 
-        {/* Desktop nav — hidden on mobile */}
+        {/* Desktop nav */}
         <ul className="hidden items-center gap-6 sm:flex">
           {links.map((l) => (
             <li key={l.href}>
@@ -37,57 +50,34 @@ export function Header({ userName, onReset }) {
             </li>
           ))}
 
-          {/* User chip with reset */}
+          {/* User chip — display only, no reset */}
           {userName && (
             <li>
-              <button
-                type="button"
-                onClick={onReset}
-                title="Reset and start over"
-                className="flex items-center gap-2 rounded-full border border-zinc-800 px-3 py-1.5 text-xs font-semibold text-zinc-300 transition hover:border-emerald-400 hover:text-emerald-400"
-              >
+              <span className="flex items-center gap-2 rounded-full border border-zinc-800 px-3 py-1.5 text-xs font-semibold text-zinc-300">
                 <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-400 text-[10px] font-bold text-black">
                   {userName.charAt(0).toUpperCase()}
                 </span>
                 {userName}
-              </button>
+              </span>
             </li>
           )}
         </ul>
 
-        {/* Hamburger — hidden on desktop, shown on mobile */}
+        {/* Hamburger — mobile only */}
         <button
           type="button"
           onClick={() => setIsMenuOpen((open) => !open)}
           aria-expanded={isMenuOpen}
-          aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+          aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
           className="rounded-lg p-2 text-emerald-400 sm:hidden"
         >
           {isMenuOpen ? (
-            <svg
-              width="28"
-              height="28"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <line x1="18" y1="6" x2="6" y2="18" />
               <line x1="6" y1="6" x2="18" y2="18" />
             </svg>
           ) : (
-            <svg
-              width="28"
-              height="28"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <line x1="3" y1="6" x2="21" y2="6" />
               <line x1="3" y1="12" x2="21" y2="12" />
               <line x1="3" y1="18" x2="21" y2="18" />
@@ -96,7 +86,7 @@ export function Header({ userName, onReset }) {
         </button>
       </nav>
 
-      {/* Mobile menu — only shown when isMenuOpen is true */}
+      {/* Mobile menu */}
       {isMenuOpen && (
         <ul className="border-t border-zinc-800 bg-zinc-950 px-4 pb-4 sm:hidden">
           {links.map((l) => (
@@ -113,24 +103,16 @@ export function Header({ userName, onReset }) {
 
           {userName && (
             <li className="mt-2 border-t border-zinc-800 pt-3">
-              <button
-                type="button"
-                onClick={() => {
-                  setIsMenuOpen(false);
-                  onReset();
-                }}
-                className="flex w-full items-center gap-2 text-sm font-semibold text-zinc-300"
-              >
+              <span className="flex items-center gap-2 text-sm font-semibold text-zinc-300">
                 <span className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-400 text-[11px] font-bold text-black">
                   {userName.charAt(0).toUpperCase()}
                 </span>
                 {userName}
-                <span className="ml-auto text-xs text-zinc-500">Reset</span>
-              </button>
+              </span>
             </li>
           )}
         </ul>
       )}
     </header>
-  );
+  )
 }
