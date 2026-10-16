@@ -29,6 +29,8 @@ function App() {
     if (userName) localStorage.setItem(STORAGE_KEY, userName)
   }, [userName])
 
+  // HELPER FUNCTIONS — passed down to child components as props
+  
   function handleRate(trainerId, value) {
     setRatings((prev) => ({ ...prev, [trainerId]: value }))
   }
