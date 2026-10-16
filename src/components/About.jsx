@@ -7,7 +7,7 @@ export function About() {
         {/* Image */}
         <figure className="overflow-hidden rounded-2xl border border-zinc-800">
           <img
-            src="/images/about-studio.webp"
+            src="images/about-studio.webp"
             alt="Bright modern fitness studio with training equipment"
             className="aspect-[4/5] w-full object-cover"
             loading="lazy"
