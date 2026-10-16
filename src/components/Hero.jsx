@@ -11,7 +11,7 @@ export function Hero({ userName }) {
       {/* Background image with dark overlay */}
       <figure className="absolute inset-0" aria-hidden="true">
         <img
-          src="/images/hero.jpg"
+          src="images/hero.jpg"
           alt=""
           className="h-full w-full object-cover"
         />
