@@ -1,5 +1,3 @@
-// TrainerCard — displays one trainer. Passes rating + onRate to RatingStars.
-
 import { RatingStars } from './RatingStars'
 
 export function TrainerCard({ trainer, rating, onRate }) {
@@ -22,10 +20,7 @@ export function TrainerCard({ trainer, rating, onRate }) {
         <p className="mt-2 flex-grow text-sm text-zinc-400">{trainer.bio}</p>
 
         <div className="mt-3 flex items-center gap-2">
-          <RatingStars
-            value={rating}
-            onChange={(v) => onRate(trainer.id, v)}
-          />
+          <RatingStars value={rating} onChange={(v) => onRate(trainer.id, v)} />
           <span className="text-sm text-zinc-500">{rating.toFixed(1)}</span>
         </div>
       </div>

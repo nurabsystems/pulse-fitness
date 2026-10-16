@@ -1,5 +1,5 @@
 // RatingStars — a reusable controlled component.
-// Receives `value` and `onChange`. Holds no internal state.
+// Receives `value` and `onChange`. Holds NO internal state.
 
 export function RatingStars({ value, onChange, max = 5 }) {
   return (
