@@ -1,56 +1,42 @@
-// Hero — the top section with headline and CTA
+// Hero — the top section with headline, greeting, and CTA.
+// Shows a personalized greeting if a name is saved.
 
-export function Hero({ userName, isReturning }) {
+export function Hero({ userName }) {
   return (
     <section
       id="hero"
       className="relative flex min-h-screen items-center justify-center overflow-hidden px-4"
       aria-labelledby="hero-heading"
     >
-      {/* Background image — decorative, marked aria-hidden */}
+      {/* Background image with dark overlay */}
       <figure className="absolute inset-0" aria-hidden="true">
         <img
           src="/images/hero.jpg"
-          alt="Athlete training in a modern fitness studio"
+          alt=""
           className="h-full w-full object-cover"
         />
-        {/* Layered overlay: darker at top and bottom, lighter in middle where text sits */}
         <div className="absolute inset-0 bg-gradient-to-b from-zinc-950/80 via-zinc-950/50 to-zinc-950/80" />
       </figure>
 
-      {/* Foreground content — it's a header for the section */}
-     <header className="relative z-10 mx-auto max-w-3xl text-center">
+      {/* Foreground content */}
+      <header className="relative z-10 mx-auto max-w-3xl text-center">
+        {/* Single greeting — one line only */}
+        <p className="mb-4 text-sm font-bold uppercase tracking-widest text-emerald-400">
+          {userName
+            ? `Welcome back, ${userName}. Still moving forward?`
+            : 'Welcome to Pulse Fitness'}
+        </p>
 
-  {/* Personalized welcome — only shown if userName is passed */}
-  {userName && (
-    <p className="mb-4 text-sm font-bold uppercase tracking-widest text-emerald-400">
-      Welcome back, {userName}
-    </p>
-  )}
-
- {/* Personalized welcome — for returning users */}
-  {userName && isReturning && (
-  <p className="mb-4 text-sm font-bold uppercase tracking-widest text-emerald-400">
-    Welcome back, {userName}. Still moving forward?
-  </p>
-)}
-
-{!isReturning && (
-  <p className="mb-4 text-sm font-bold uppercase tracking-widest text-emerald-400">
-    Welcome to Pulse Fitness
-  </p>
-)}
-
-  <h1
-    id="hero-heading"
-    className="text-4xl font-extrabold leading-tight tracking-tight text-white sm:text-5xl md:text-6xl"
-  >
-    Train Smart. Live Strong.
-  </h1>
+        <h1
+          id="hero-heading"
+          className="text-4xl font-extrabold leading-tight tracking-tight text-white sm:text-5xl md:text-6xl"
+        >
+          Train Smart. Live Strong.
+        </h1>
 
         <p className="mt-4 text-base text-zinc-200 sm:text-lg md:text-xl">
-          Group classes, expert trainers, and flexible plans — everything you
-          need to keep fit and feel stronger.
+          Group classes, expert trainers, and flexible plans —
+          everything you need to keep fit and feel stronger.
         </p>
 
         <a
@@ -61,5 +47,5 @@ export function Hero({ userName, isReturning }) {
         </a>
       </header>
     </section>
-  );
+  )
 }
