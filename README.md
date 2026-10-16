@@ -1,16 +1,51 @@
-# React + Vite
+# Pulse Fitness — React + Tailwind Edition
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+> An evolved, single-page fitness studio website rebuilt with **React + Vite + Tailwind CSS**.
 
-Currently, two official plugins are available:
+**Repo:** github.com/nurabsystems/pulse-fitness
+**Live:** nurabsystems.github.io/pulse-fitness
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## Overview
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Pulse Fitness is a modern fitness studio website — now a React application. This project evolved from the Week 1 static HTML/CSS version (preserved in `legacy/`) and continues to grow toward a full-stack app in Week 3.
 
-## Expanding the ESLint configuration
+**Same business. Same content. Same look. New architecture.**
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## Tech Stack
+
+- **React 19** — component-based UI
+- **Vite** — fast build tool
+- **Tailwind CSS v4** — utility-first styling
+- **No TypeScript** — plain JS by design
+- **No extra libraries** — data is hardcoded, ready for a Week 3 backend
+
+---
+
+## Features
+
+- Component-based architecture (Header, Hero, About, Classes, Trainers, Pricing, Contact, Footer)
+- **Real filter** on trainers by specialty (HIIT / Strength / Yoga) — uses `useState`
+- **Trainer-match quiz** — multi-step state machine (entrance → quiz → result → matched)
+- **Rating stars** — reusable controlled component on every trainer card
+- **Name capture** — captured in the contact form, remembered via `localStorage`, greeting on return
+- Fully responsive — mobile-first Tailwind classes (`sm:` `md:` `lg:`)
+- No horizontal scroll at any breakpoint
+
+---
+
+## Key React Patterns Demonstrated
+
+- `useState` for filter, quiz step, quiz answers, ratings, and user name
+- **Controlled inputs** (Contact form, RatingStars) — value + onChange, no internal state
+- **Conditional rendering** (thank-you screen, quiz modes, greeting)
+- **State lifting** — App owns shared state, passes down via props, listens via callbacks
+- **`key` prop for component reset** — TrainerMatch resets on key change (no `useEffect` hacks)
+- **Data-driven rendering** — every list maps over an array of objects from `src/data/`
+
+---
+
+## Project Structure
