@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Pulse Fitness Presentation</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/theme/black.css">
+  <style>
+    .reveal { font-family: 'Inter', sans-serif; }
+    .reveal h1, .reveal h2 { color: #00E676; text-transform: none; }
+    .reveal pre { box-shadow: none; background: #161B22; border-left: 3px solid #00E676; }
+    .reveal code { color: #00E676; }
+    .reveal strong { color: #00E676; }
+    .reveal .slide-number { color: #8B949E; }
+    .reveal ul { display: block; }
+  </style>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <section>
+        <h1>Pulse Fitness</h1>
+        <h2>React + Tailwind Edition</h2>
+        <p><strong>Team 7, Group A — Week 2</strong></p>
+        <p>Nurudeen Abdulsalam</p>
+        <p><a href="https://nurabsystems.github.io/pulse-fitness">nurabsystems.github.io/pulse-fitness</a></p>
+      </section>
+
+      <section>
+        <h2>Evolution, Not a New Project</h2>
+        <blockquote>"I evolved my Week 1 static site into a React + Tailwind application — same content, same look, new architecture."</blockquote>
+        <p><strong>Not a new project. An evolution.</strong></p>
+      </section>
+
+      <section>
+        <h2>What Changed</h2>
+        <table>
+          <tr><th>Week 1</th><th>Week 2</th></tr>
+          <tr><td>HTML + CSS</td><td>React + Vite + Tailwind</td></tr>
+          <tr><td>Static markup</td><td>Component-based</td></tr>
+          <tr><td>Hardcoded</td><td>Data-driven</td></tr>
+          <tr><td>No interactivity</td><td>Filter · Quiz · Ratings</td></tr>
+        </table>
+        <p style="margin-top:20px">Preserved in <code>legacy/</code> — Git history keeps the evolution.</p>
+      </section>
+
+      <section>
+        <h2>Tech Stack</h2>
+        <ul>
+          <li><strong>React 19</strong> — component UI</li>
+          <li><strong>Vite</strong> — build tool</li>
+          <li><strong>Tailwind CSS v4</strong> — utility styling</li>
+          <li>No TypeScript</li>
+          <li>No extra libraries</li>
+        </ul>
+        <p><code>npm run dev</code> starts in ~600ms</p>
+      </section>
+
+      <section>
+        <h2>Project Structure</h2>
+        <pre><code>src/
+├── components/     ← 11 components
+├── data/           ← 4 data files
+├── App.jsx
+└── main.jsx</code></pre>
+        <p>Every section is a component.<br>Every list is data-driven.</p>
+      </section>
+
+      <section>
+        <h2>Component Architecture</h2>
+        <p><strong>8 section components:</strong><br>Header · Hero · About · Classes · Trainers · Pricing · Contact · Footer</p>
+        <p><strong>3 supporting components:</strong><br>TrainerCard · RatingStars · TrainerMatch</p>
+        <p><strong>App.jsx</strong> composes them all.</p>
+      </section>
+
+      <section>
+        <h2>Data-Driven Rendering</h2>
+        <pre><code>export const trainers = [
+  { id: 'alex-rivera',
+    name: 'Alex Rivera',
+    specialty: 'HIIT', ... },
+  { id: 'maya-chen',
+    name: 'Maya Chen',
+    specialty: 'Strength', ... },
+]</code></pre>
+        <p>No copy-pasted JSX.</p>
+      </section>
+
+      <section>
+        <h2>Filter with useState</h2>
+        <pre><code>const [filter, setFilter] = useState('All')
+
+const filtered = filter === 'All'
+  ? trainers
+  : trainers.filter(
+      (t) => t.specialty === filter
+    )</code></pre>
+        <p><strong>Derived state. No useEffect needed.</strong></p>
+      </section>
+
+      <section>
+        <h2>Controlled Component — RatingStars</h2>
+        <pre><code>&lt;RatingStars
+  value={rating}
+  onChange={(v) =&gt; onRate(trainer.id, v)}
+/&gt;</code></pre>
+        <p>RatingStars holds <strong>NO internal state</strong>.</p>
+        <p>The parent owns the value. The child fires the change.</p>
+      </section>
+
+      <section>
+        <h2>State Lifting</h2>
+        <pre><code>App (owns ratings, userName)
+ │
+ ├── Trainers → TrainerCard → RatingStars
+ │
+ └── Contact (captures name)</code></pre>
+        <p><strong>Data down. Events up.</strong></p>
+      </section>
+
+      <section>
+        <h2>Multi-Step Quiz State</h2>
+        <p>Three modes: <code>entrance</code> → <code>quiz</code> → <code>result</code></p>
+        <pre><code>const [mode, setMode] = useState('entrance')
+const [step, setStep] = useState(0)
+const [answers, setAnswers] = useState({})</code></pre>
+        <p>Derived result computed from answers.</p>
+      </section>
+
+      <section>
+        <h2>Name Capture + Personalization</h2>
+        <ol>
+          <li>Contact form → name bubbles up</li>
+          <li>App stores it → localStorage persists</li>
+          <li>Next visit → Hero greets by name</li>
+          <li>Same name flows into quiz result</li>
+        </ol>
+        <p><strong>Same pattern as ratings. Consistent.</strong></p>
+      </section>
+
+      <section>
+        <h2>Flexbox vs Grid</h2>
+        <p><strong>Grid</strong> — rigid 2D layouts (About section)</p>
+        <p><strong>Flexbox</strong> — variable-count layouts (trainers, pricing)</p>
+        <p><code>justify-center</code> handles orphan cards Grid can't.</p>
+        <p><strong>Right tool for the right job.</strong></p>
+      </section>
+
+      <section>
+        <h2>Deployment</h2>
+        <pre><code>npm run deploy</code></pre>
+        <p>Vite builds → gh-pages pushes → GitHub Pages serves</p>
+        <p><strong>Live:</strong><br><a href="https://nurabsystems.github.io/pulse-fitness">nurabsystems.github.io/pulse-fitness</a></p>
+      </section>
+
+      <section>
+        <h2>What I Learned</h2>
+        <ul>
+          <li>Controlled components are the default, not the exception</li>
+          <li>Derived state eliminates whole classes of bugs</li>
+          <li>Lifting state makes the data flow obvious</li>
+          <li><code>key</code> prop often beats <code>useEffect</code> for resetting</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>What's Next — Week 3</h2>
+        <p>Data lives in <code>src/data/</code><br>Arrays of objects with <code>id</code> fields.</p>
+        <p><strong>Week 3 = swap <code>import</code> for <code>fetch</code>.</strong><br>Architecture is ready.</p>
+      </section>
+
+      <section>
+        <h1>Thank You</h1>
+        <p><strong>Repo:</strong> <a href="https://github.com/nurabsystems/pulse-fitness">github.com/nurabsystems/pulse-fitness</a></p>
+        <p><strong>Live:</strong> <a href="https://nurabsystems.github.io/pulse-fitness">nurabsystems.github.io/pulse-fitness</a></p>
+        <p style="margin-top:40px">Questions?</p>
+      </section>
+
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.js"></script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: true,
+      transition: 'fade',
+      controls: true,
+      progress: true,
+    });
+  </script>
+</body>
+</html>
