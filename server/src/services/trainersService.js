@@ -1,18 +1,16 @@
 // src/services/trainersService.js — DB layer, no HTTP knowledge
 
 import { db } from '../db/index.js';
-// Note: we'll import the trainers table in Phase 1.4
+import { trainers } from '../db/schema.js';
+import { eq } from 'drizzle-orm';
 
 export const trainersService = {
   async getAll() {
-    // Placeholder — will return real data in Phase 1.4
-    return [
-      { id: 'placeholder-1', name: 'Alex Rivera', specialty: 'HIIT' },
-      { id: 'placeholder-2', name: 'Maya Chen', specialty: 'Strength' },
-    ];
+    return await db.select().from(trainers);
   },
 
   async getById(id) {
-    return { id, name: 'Placeholder Trainer', specialty: 'HIIT' };
+    const [trainer] = await db.select().from(trainers).where(eq(trainers.id, id));
+    return trainer || null;
   },
 };
