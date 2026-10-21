@@ -5,6 +5,8 @@ import express from 'express';
 import cors from 'cors';
 import { testConnection } from './db/index.js';
 import { trainersRouter } from './routes/trainers.js';
+import { classesRouter } from './routes/classes.js';
+import { pricingRouter } from './routes/pricing.js';
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -25,7 +27,8 @@ app.get('/api/health', async (req, res) => {
 
 // Routes
 app.use('/api/trainers', trainersRouter);
-
+app.use('/api/classes', classesRouter);
+app.use('/api/pricing', pricingRouter);
 // 404 fallback
 app.use((req, res) => {
   res.status(404).json({ error: 'Route not found' });
