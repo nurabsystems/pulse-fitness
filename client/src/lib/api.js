@@ -20,4 +20,6 @@ async function request(path, options = {}) {
 export const api = {
   getTrainers: () => request('/trainers'),
   getTrainerById: (id) => request(`/trainers/${id}`),
+  getClasses: () => request('/classes'),
+  getPricing: () => request('/pricing'),
 };
