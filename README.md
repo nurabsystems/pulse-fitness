@@ -1,6 +1,9 @@
-# Pulse Fitness — React + Tailwind Edition
 
-> An evolved, single-page fitness studio website rebuilt with **React + Vite + Tailwind CSS**.
+
+
+# Pulse Fitness — React + Tailwind + Backend Edition 
+
+> An evolved, single-page fitness studio website rebuilt with **React + Vite + Tailwind CSS + Backend **.
 
 **Repo:** github.com/nurabsystems/pulse-fitness
 **Live:** nurabsystems.github.io/pulse-fitness
@@ -22,6 +25,21 @@ Pulse Fitness is a modern fitness studio website — now a React application. Th
 - **Tailwind CSS v4** — utility-first styling
 - **No TypeScript** — plain JS by design
 - **No extra libraries** — data is hardcoded, ready for a Week 3 backend
+
+## Data Architecture (Week 3)
+
+- **Images:** `client/public/images/` — served by Vite (dev) or Vercel (prod)
+- **Data:** PostgreSQL (Neon cloud) — served via Express API
+- **Seed sources:** `server/src/db/*.data.js` — insert initial data
+- **Logic:** `client/src/data/matchQuiz.js` — quiz rules, not resources
+
+### Migration Status
+- ✅ Trainers → API (Week 3 Day 1)
+- ⏳ Classes → API (next)
+- ⏳ Pricing → API (next)
+
+
+
 
 ---
 
