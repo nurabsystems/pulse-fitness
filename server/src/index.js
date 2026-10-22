@@ -7,12 +7,21 @@ import { testConnection } from './db/index.js';
 import { trainersRouter } from './routes/trainers.js';
 import { classesRouter } from './routes/classes.js';
 import { pricingRouter } from './routes/pricing.js';
+import { toNodeHandler } from 'better-auth/node';
+import { auth } from './lib/auth.js';
 
 const app = express();
 const PORT = process.env.PORT || 4000;
 
 // Middleware
-app.use(cors({ origin: process.env.CLIENT_URL || 'http://localhost:5173' }));
+app.use(cors({
+  origin: process.env.CLIENT_URL || 'http://localhost:5173',
+  credentials: true,
+}));
+
+// Better Auth BEFORE express.json() — it needs the raw body
+app.all('/api/auth/*splat', toNodeHandler(auth));
+
 app.use(express.json());
 
 // Health check — proves the server is up
