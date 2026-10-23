@@ -1,12 +1,10 @@
-// src/lib/api.js
-// Central place for all API calls.
-// Change the base URL in one place, everything follows.
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
+// client/src/lib/api.js
+const API_URL = '/api';
 
 async function request(path, options = {}) {
   const response = await fetch(`${API_URL}${path}`, {
     headers: { 'Content-Type': 'application/json', ...options.headers },
+    credentials: 'include',
     ...options,
   });
 
