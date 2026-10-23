@@ -1,15 +1,14 @@
 // src/lib/auth.js
-import { betterAuth } from 'better-auth';
-import { drizzleAdapter } from 'better-auth/adapters/drizzle';
-import { db } from '../db/index.js';
-import * as schema from '../db/schema.js';
-import { Resend } from 'resend';
+import { betterAuth } from "better-auth";
+import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { db } from "../db/index.js";
+import * as schema from "../db/schema.js";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
-    provider: 'pg',
+    provider: "pg",
     schema: {
       user: schema.user,
       session: schema.session,
@@ -18,22 +17,22 @@ export const auth = betterAuth({
     },
   }),
   secret: process.env.BETTER_AUTH_SECRET,
-  baseURL: process.env.BETTER_AUTH_URL || 'http://localhost:4000',
-  trustedOrigins: [process.env.CLIENT_URL || 'http://localhost:5173'],
+  baseURL: process.env.BETTER_AUTH_URL || "http://localhost:4000",
+  trustedOrigins: [process.env.CLIENT_URL || "http://localhost:5173"],
   emailAndPassword: {
     enabled: true,
     requireEmailVerification: false,
     minPasswordLength: 8,
     sendResetPassword: async ({ user, url }) => {
-      // In dev, Resend's sandbox allows sending to your verified email
-      // In production, use Resend, SendGrid, etc.
-      console.log(`\n📧 Password reset email for ${user.email}`);
-      console.log(`🔗 Reset URL: ${url}\n`);
-      
+      console.log("\n═══════════════════════════════════════");
+      console.log(`📧 PASSWORD RESET REQUEST`);
+      console.log(`   User: ${user.email}`);
+      console.log(`   URL: ${url}`);
+      console.log("═══════════════════════════════════════\n");
       await resend.emails.send({
-        from: 'Pulse Fitness <onboarding@resend.dev>',  // sandbox sender
+        from: "Pulse Fitness <onboarding@resend.dev>", // sandbox sender
         to: user.email,
-        subject: 'Reset your Pulse Fitness password',
+        subject: "Reset your Pulse Fitness password",
         html: `
           <div style="font-family: sans-serif; max-width: 500px; margin: 0 auto; padding: 20px;">
             <h2 style="color: #00E676;">Reset Your Password</h2>
