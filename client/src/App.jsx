@@ -1,4 +1,6 @@
-import { useState, useEffect } from 'react'
+// client/src/App.jsx
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { useState } from 'react'
 import { Header } from './components/Header'
 import { Hero } from './components/Hero'
 import { About } from './components/About'
@@ -7,30 +9,35 @@ import { Trainers } from './components/Trainers'
 import { Pricing } from './components/Pricing'
 import { Contact } from './components/Contact'
 import { Footer } from './components/Footer'
+import { Login } from './pages/Login'
+import { Signup } from './pages/Signup'
+import { useLocation } from 'react-router-dom'
+import { useEffect } from 'react'
 
-const STORAGE_KEY = 'pulse-fitness-userName'
 
-function App() {
+function ScrollToHash() {
+  const location = useLocation()
+
+  useEffect(() => {
+    if (location.hash) {
+      const id = location.hash.replace('#', '')
+      const el = document.getElementById(id)
+      if (el) {
+        setTimeout(() => {
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        }, 100)
+      }
+    }
+  }, [location])
+
+  return null
+}
+
+function HomePage() {
   const [ratings, setRatings] = useState({})
   const [matchedSpecialty, setMatchedSpecialty] = useState(null)
+  const [userName, setUserName] = useState('')
 
-  // Read saved name once on mount
-  const [userName, setUserName] = useState(
-    () => localStorage.getItem(STORAGE_KEY) || ''
-  )
-
-  // Track if this is a returning visitor
-  const [isReturning] = useState(
-    () => !!localStorage.getItem(STORAGE_KEY)
-  )
-
-  // Persist name to localStorage whenever it changes
-  useEffect(() => {
-    if (userName) localStorage.setItem(STORAGE_KEY, userName)
-  }, [userName])
-
-  // HELPER FUNCTIONS — passed down to child components as props
-  
   function handleRate(trainerId, value) {
     setRatings((prev) => ({ ...prev, [trainerId]: value }))
   }
@@ -45,24 +52,37 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-white">
-      <Header userName={userName} />
-      <main>
-        <Hero userName={userName} isReturning={isReturning} />
-        <About />
-        <Classes />
-        <Trainers
-          ratings={ratings}
-          onRate={handleRate}
-          matchedSpecialty={matchedSpecialty}
-          onMatch={handleMatch}
-          userName={userName}
-        />
-        <Pricing />
-        <Contact userName={userName} onNameCapture={handleNameCapture} />
-      </main>
-      <Footer />
-    </div>
+    <main>
+      <Hero userName={userName} />
+      <About />
+      <Classes />
+      <Trainers
+        ratings={ratings}
+        onRate={handleRate}
+        matchedSpecialty={matchedSpecialty}
+        onMatch={handleMatch}
+        userName={userName}
+      />
+      <Pricing />
+      <Contact userName={userName} onNameCapture={handleNameCapture} />
+    </main>
+  )
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <ScrollToHash />
+      <div className="min-h-screen bg-zinc-950 text-white">
+        <Header />
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+        </Routes>
+        <Footer />
+      </div>
+    </BrowserRouter>
   )
 }
 
