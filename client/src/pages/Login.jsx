@@ -65,6 +65,16 @@ export function Login() {
           />
         </div>
 
+        {/* ✅ Forgot password link */}
+        <div className="mt-2 flex justify-end">
+          <Link
+            to="/forgot-password"
+            className="text-xs font-semibold text-zinc-400 transition hover:text-emerald-400"
+          >
+            Forgot password?
+          </Link>
+        </div>
+
         <button
           type="submit"
           disabled={loading}
