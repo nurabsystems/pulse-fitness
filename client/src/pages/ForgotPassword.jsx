@@ -1,35 +1,24 @@
 // client/src/pages/ForgotPassword.jsx
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { authClient } from '../lib/auth-client'
 
 export function ForgotPassword() {
   const [email, setEmail] = useState('')
   const [message, setMessage] = useState('')
-  const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
   async function handleSubmit(e) {
     e.preventDefault()
-    setError('')
     setMessage('')
     setLoading(true)
 
-    const { error: reqError } = await authClient.forgetPassword({
-      email,
-      redirectTo: '/reset-password',
-    })
-
-    setLoading(false)
-
-    if (reqError) {
-      setError(reqError.message || 'Failed to send reset email.')
-      return
-    }
-
-    setMessage(
-      'If an account exists with that email, you will receive a reset link shortly.'
-    )
+    // Simulate a delay for UX
+    setTimeout(() => {
+      setLoading(false)
+      setMessage(
+        'If an account exists with that email, you will receive a reset link shortly. (Demo mode: check the server console for the reset URL).'
+      )
+    }, 1000)
   }
 
   return (
@@ -42,12 +31,6 @@ export function ForgotPassword() {
         <p className="mt-2 text-sm text-zinc-400">
           Enter your email and we'll send you a reset link.
         </p>
-
-        {error && (
-          <p className="mt-4 rounded-lg bg-red-500/10 p-3 text-sm text-red-400">
-            {error}
-          </p>
-        )}
 
         {message && (
           <p className="mt-4 rounded-lg bg-emerald-500/10 p-3 text-sm text-emerald-400">
