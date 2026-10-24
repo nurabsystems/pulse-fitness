@@ -25,12 +25,18 @@ export const auth = betterAuth({
     requireEmailVerification: false,
     minPasswordLength: 8,
     sendResetPassword: async ({ user, url }) => {
-      // For demo: log the URL. No external email API required.
       console.log("\n═══════════════════════════════════════");
       console.log(`📧 PASSWORD RESET REQUEST`);
       console.log(`   User: ${user.email}`);
       console.log(`   URL: ${url}`);
       console.log("═══════════════════════════════════════\n");
+    },
+  },
+  // 👇 THIS IS THE FIX
+  advanced: {
+    defaultCookieAttributes: {
+      sameSite: "none",
+      secure: true,
     },
   },
 });
