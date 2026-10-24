@@ -2,7 +2,7 @@
 import { createAuthClient } from 'better-auth/react';
 
 export const authClient = createAuthClient({
-  baseURL: window.location.origin,
+  baseURL: 'https://pulse-fitness-y1fa.onrender.com',
 });
 
 export const {

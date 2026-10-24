@@ -1,5 +1,5 @@
 // client/src/lib/api.js
-const API_URL = '/api';
+const API_URL = 'https://pulse-fitness-y1fa.onrender.com/api';
 
 async function request(path, options = {}) {
   const response = await fetch(`${API_URL}${path}`, {
