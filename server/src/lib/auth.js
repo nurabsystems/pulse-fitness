@@ -4,8 +4,6 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { db } from "../db/index.js";
 import * as schema from "../db/schema.js";
 
-
-
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
     provider: "pg",
@@ -18,34 +16,21 @@ export const auth = betterAuth({
   }),
   secret: process.env.BETTER_AUTH_SECRET,
   baseURL: process.env.BETTER_AUTH_URL || "http://localhost:4000",
-  trustedOrigins: [process.env.CLIENT_URL || "http://localhost:5173"],
+  trustedOrigins: [
+    "https://pulse-fitness-tdsz.vercel.app",
+    "http://localhost:5173",
+  ],
   emailAndPassword: {
     enabled: true,
     requireEmailVerification: false,
     minPasswordLength: 8,
     sendResetPassword: async ({ user, url }) => {
+      // For demo: log the URL. No external email API required.
       console.log("\n═══════════════════════════════════════");
       console.log(`📧 PASSWORD RESET REQUEST`);
       console.log(`   User: ${user.email}`);
       console.log(`   URL: ${url}`);
       console.log("═══════════════════════════════════════\n");
-      await resend.emails.send({
-        from: "Pulse Fitness <onboarding@resend.dev>", // sandbox sender
-        to: user.email,
-        subject: "Reset your Pulse Fitness password",
-        html: `
-          <div style="font-family: sans-serif; max-width: 500px; margin: 0 auto; padding: 20px;">
-            <h2 style="color: #00E676;">Reset Your Password</h2>
-            <p>Hi ${user.name},</p>
-            <p>Click the button below to reset your Pulse Fitness password:</p>
-            <a href="${url}" style="display: inline-block; background: #00E676; color: #0D1117; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold; margin: 20px 0;">
-              Reset Password
-            </a>
-            <p style="color: #666; font-size: 14px;">Or copy this link: ${url}</p>
-            <p style="color: #999; font-size: 12px;">If you didn't request this, you can ignore this email.</p>
-          </div>
-        `,
-      });
     },
   },
 });
