@@ -88,3 +88,21 @@ export const verification = pgTable('verification', {
   createdAt: timestamp('created_at').defaultNow(),
   updatedAt: timestamp('updated_at').defaultNow(),
 });
+
+// --- ORDERS ---
+export const orders = pgTable('orders', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  userId: text('user_id').notNull(), // references Better Auth user
+  status: text('status').notNull().default('pending'), // 'pending' or 'paid'
+  total: integer('total').notNull(), // in cents
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+});
+
+// --- ORDER ITEMS ---
+export const orderItems = pgTable('order_items', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  orderId: uuid('order_id').notNull().references(() => orders.id, { onDelete: 'cascade' }),
+  pricingId: uuid('pricing_id').notNull(),
+  name: text('name').notNull(),
+  price: integer('price').notNull(), // in cents
+});
