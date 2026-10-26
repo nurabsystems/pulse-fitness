@@ -9,6 +9,8 @@ import { classesRouter } from './routes/classes.js';
 import { pricingRouter } from './routes/pricing.js';
 import { toNodeHandler } from 'better-auth/node';
 import { auth } from './lib/auth.js';
+import { checkoutRouter } from './routes/checkout.js';
+import { webhookRouter } from './routes/webhook.js';
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -21,6 +23,9 @@ app.use(cors({
 
 // Better Auth BEFORE express.json() — it needs the raw body
 app.all('/api/auth/*splat', toNodeHandler(auth));
+
+// webhookRouter  added  BEFORE express.json()
+app.use('/api/webhook', webhookRouter);
 
 app.use(express.json());
 
@@ -38,6 +43,7 @@ app.get('/api/health', async (req, res) => {
 app.use('/api/trainers', trainersRouter);
 app.use('/api/classes', classesRouter);
 app.use('/api/pricing', pricingRouter);
+app.use('/api/checkout', checkoutRouter);
 // 404 fallback
 app.use((req, res) => {
   res.status(404).json({ error: 'Route not found' });
