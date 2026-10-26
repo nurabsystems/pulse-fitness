@@ -29,6 +29,38 @@ export function Pricing() {
     return () => { cancelled = true }
   }, [])
 
+  async function handleCheckout(pricingId) {
+    try {
+      // 1. Call the backend checkout route
+      const response = await fetch('https://pulse-fitness-y1fa.onrender.com/api/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include', // Sends the session cookie!
+        body: JSON.stringify({ pricingId }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          alert('Please sign in to make a purchase.');
+          window.location.assign('/login');
+          return;
+        }
+        throw new Error(data.error || 'Checkout failed');
+      }
+
+      // 2. Redirect to Stripe's hosted checkout page
+      if (data.url) {
+        window.location.assign(data.url);
+      }
+
+    } catch (error) {
+      console.error('Checkout error:', error);
+      alert('Could not start checkout. Please try again.');
+    }
+  }
+
   return (
     <section id="pricing" className="mx-auto max-w-6xl px-4 py-20 sm:py-24">
       <header className="text-center">
@@ -99,16 +131,16 @@ export function Pricing() {
                   ))}
                 </ul>
 
-                <a
-                  href="#contact"
-                  className={`mt-10 block rounded-full px-6 py-3 text-center text-sm font-semibold transition ${
+                <button
+                  onClick={() => handleCheckout(plan.id)}
+                  className={`mt-10 block w-full rounded-full px-6 py-3 text-center text-sm font-semibold transition ${
                     plan.featured
                       ? 'bg-emerald-400 text-black hover:bg-emerald-500'
                       : 'border border-emerald-400 text-emerald-400 hover:bg-emerald-400 hover:text-black'
                   }`}
                 >
-                  Choose {plan.name}
-                </a>
+                  Order {plan.name}
+                </button>
               </article>
             </div>
           ))}
