@@ -3,11 +3,14 @@
 
 import { useState, useEffect } from 'react'
 import { api } from '../lib/api'
+import { useNavigate } from 'react-router-dom';
 
 export function Pricing() {
+  const navigate = useNavigate();
   const [pricingPlans, setPricingPlans] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  
 
   useEffect(() => {
     let cancelled = false
@@ -43,8 +46,7 @@ export function Pricing() {
 
       if (!response.ok) {
         if (response.status === 401) {
-          alert('Please sign in to make a purchase.');
-          window.location.assign('/login');
+          navigate('/login?redirect=/pricing&reason=auth');
           return;
         }
         throw new Error(data.error || 'Checkout failed');

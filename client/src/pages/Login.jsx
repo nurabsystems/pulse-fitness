@@ -1,11 +1,17 @@
 // client/src/pages/Login.jsx
 import { useState } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
+import { useNavigate, Link, useSearchParams } from 'react-router-dom'
 import { signIn } from '../lib/auth-client'
 import { PasswordInput } from '../components/PasswordInput'
 
 export function Login() {
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
+  
+  // Get the redirect path and reason from the URL query params
+  const redirectUrl = searchParams.get('redirect') || '/'
+  const reason = searchParams.get('reason')
+
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -24,7 +30,8 @@ export function Login() {
       return
     }
 
-    navigate('/')
+    // Send them back to where they came from (e.g., /pricing)
+    navigate(redirectUrl)
   }
 
   return (
@@ -35,6 +42,13 @@ export function Login() {
       >
         <h1 className="text-2xl font-bold text-white">Sign In</h1>
         <p className="mt-2 text-sm text-zinc-400">Welcome back to Pulse Fitness.</p>
+
+        {/* Contextual Banner: Explains why they were redirected here */}
+        {reason === 'auth' && (
+          <div className="mt-4 rounded-lg bg-emerald-500/10 p-3 text-sm text-emerald-400 border border-emerald-500/20">
+            Please sign in to complete your purchase.
+          </div>
+        )}
 
         {error && (
           <p className="mt-4 rounded-lg bg-red-500/10 p-3 text-sm text-red-400">
@@ -65,7 +79,6 @@ export function Login() {
           />
         </div>
 
-        {/* ✅ Forgot password link */}
         <div className="mt-2 flex justify-end">
           <Link
             to="/forgot-password"
