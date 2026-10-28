@@ -21,9 +21,12 @@ export function Success() {
       try {
         // You will need an endpoint to get order status.
         // Replace with your actual backend URL
-       const res = await fetch(
-  `https://pulse-fitness-y1fa.onrender.com/api/orders/${orderId}?session_id=${sessionId}`
-);
+        const apiUrl =
+          import.meta.env.VITE_API_URL ||
+          "https://pulse-fitness-y1fa.onrender.com/api";
+        const res = await fetch(
+          `${apiUrl}/orders/${orderId}?session_id=${sessionId}`,
+        );
         const data = await res.json();
 
         if (data.order && data.order.status === "paid") {
