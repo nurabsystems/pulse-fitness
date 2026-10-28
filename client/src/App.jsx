@@ -15,6 +15,7 @@ import { ForgotPassword } from "./pages/ForgotPassword";
 import { ResetPassword } from "./pages/ResetPassword";
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
+import { Success } from './pages/Success'
 
 function ScrollToHash() {
   const location = useLocation();
@@ -82,6 +83,7 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/success" element={<Success />} />
         </Routes>
         <Footer />
       </div>

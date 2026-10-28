@@ -11,6 +11,7 @@ import { toNodeHandler } from 'better-auth/node';
 import { auth } from './lib/auth.js';
 import { checkoutRouter } from './routes/checkout.js';
 import { webhookRouter } from './routes/webhook.js';
+import { ordersRouter } from './routes/orders.js';
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -26,6 +27,11 @@ app.all('/api/auth/*splat', toNodeHandler(auth));
 
 // webhookRouter  added  BEFORE express.json()
 app.use('/api/webhook', webhookRouter);
+
+
+// ordersRouter added BEFORE express.json()
+app.use('/api/orders', ordersRouter);
+
 
 app.use(express.json());
 
