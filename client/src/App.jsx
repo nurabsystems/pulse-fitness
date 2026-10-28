@@ -1,5 +1,5 @@
 // client/src/App.jsx
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useState } from "react";
 import { Header } from "./components/Header";
 import { Hero } from "./components/Hero";
@@ -15,7 +15,7 @@ import { ForgotPassword } from "./pages/ForgotPassword";
 import { ResetPassword } from "./pages/ResetPassword";
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
-import { Success } from './pages/Success'
+import { Success } from "./pages/Success";
 
 function ScrollToHash() {
   const location = useLocation();
@@ -84,6 +84,7 @@ function App() {
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/success" element={<Success />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
         <Footer />
       </div>
