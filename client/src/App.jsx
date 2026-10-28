@@ -18,21 +18,24 @@ import { useEffect } from "react";
 import { Success } from "./pages/Success";
 
 function ScrollToHash() {
-  const location = useLocation();
+  const location = useLocation()
 
   useEffect(() => {
     if (location.hash) {
-      const id = location.hash.replace("#", "");
-      const el = document.getElementById(id);
+      const id = location.hash.replace('#', '')
+      const el = document.getElementById(id)
       if (el) {
         setTimeout(() => {
-          el.scrollIntoView({ behavior: "smooth", block: "start" });
-        }, 100);
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        }, 100)
       }
+    } else {
+      // If there's no hash, scroll to top (Home)
+      window.scrollTo({ top: 0, behavior: 'smooth' })
     }
-  }, [location]);
+  }, [location])
 
-  return null;
+  return null
 }
 
 function HomePage() {

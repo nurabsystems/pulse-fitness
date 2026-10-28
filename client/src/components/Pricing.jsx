@@ -46,7 +46,7 @@ export function Pricing() {
 
       if (!response.ok) {
         if (response.status === 401) {
-          navigate('/login?redirect=/#pricing&reason=auth');
+          navigate('/login?reason=auth&redirect=/%23pricing'); 
           return;
         }
         throw new Error(data.error || 'Checkout failed');

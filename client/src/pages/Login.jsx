@@ -30,8 +30,9 @@ export function Login() {
       return
     }
 
-    // Send them back to where they came from (e.g., /pricing)
-    navigate(redirectUrl)
+    // Decode the redirect URL (in case it has %23)
+    const target = decodeURIComponent(redirectUrl); 
+    navigate(target);
   }
 
   return (
