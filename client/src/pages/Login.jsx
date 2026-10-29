@@ -1,11 +1,10 @@
 // client/src/pages/Login.jsx
 import { useState } from "react";
-import { useNavigate, Link, useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { signIn } from "../lib/auth-client";
 import { PasswordInput } from "../components/PasswordInput";
 
 export function Login() {
-  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
   // Get the redirect path and reason from the URL query params
@@ -16,23 +15,23 @@ export function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
 
-      async function handleSubmit(e) {
-    e.preventDefault()
-    setError('')
-    setLoading(true)
-
-    const { error: signinError } = await signIn.email({ email, password })
+    const { error: signinError } = await signIn.email({ email, password });
 
     if (signinError) {
-      setError(signinError.message || 'Login failed. Try again.')
-      setLoading(false)
-      return
+      setError(signinError.message || "Login failed. Try again.");
+      setLoading(false);
+      return;
     }
 
-    // Just navigate. App.jsx's ScrollToHash will handle the rest.
-    const decodedTarget = decodeURIComponent(redirectUrl)
-    navigate(decodedTarget)
+    const decodedTarget = decodeURIComponent(redirectUrl);
+
+    // The Nuclear Option: Full page reload to clear scroll memory
+    window.location.href = decodedTarget;
   }
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-950 px-4 py-12">
