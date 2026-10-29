@@ -1,11 +1,5 @@
 // client/src/App.jsx
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-  Navigate,
-  ScrollRestoration,
-} from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useState } from "react";
 import { Header } from "./components/Header";
 import { Hero } from "./components/Hero";
@@ -24,24 +18,31 @@ import { useEffect } from "react";
 import { Success } from "./pages/Success";
 
 function ScrollToHash() {
-  const location = useLocation();
+  const location = useLocation()
 
   useEffect(() => {
-    if (location.hash) {
-      const id = location.hash.replace("#", "");
-
-      // Using 'auto' instead of 'smooth' prevents the browser from canceling
-      // the scroll when layout shifts occur (like images loading).
-      const el = document.getElementById(id);
-      if (el) {
-        el.scrollIntoView({ behavior: "auto", block: "start" });
-      }
-    } else {
-      window.scrollTo({ top: 0, behavior: "auto" });
+    // 1. Tell the browser to STOP restoring the scroll position on navigation
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual'
     }
-  }, [location]);
 
-  return null;
+    // 2. Handle the scrolling
+    if (location.hash) {
+      const id = location.hash.replace('#', '')
+      const el = document.getElementById(id)
+      
+      // We use a tiny delay to ensure the page has painted
+      setTimeout(() => {
+        if (el) {
+          el.scrollIntoView({ behavior: 'auto', block: 'start' })
+        }
+      }, 50)
+    } else {
+      window.scrollTo({ top: 0, behavior: 'auto' })
+    }
+  }, [location])
+
+  return null
 }
 
 function HomePage() {
@@ -83,7 +84,6 @@ function HomePage() {
 function App() {
   return (
     <BrowserRouter>
-      <ScrollRestoration />
       <ScrollToHash />
       <div className="min-h-screen bg-zinc-950 text-white">
         <Header />
