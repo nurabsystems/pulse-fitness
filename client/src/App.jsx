@@ -17,50 +17,64 @@ import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import { Success } from "./pages/Success";
 function ScrollToHash() {
-  const location = useLocation();
+  const location = useLocation()
+  const [isScrolling, setIsScrolling] = useState(false)
 
   useEffect(() => {
-    if ("scrollRestoration" in window.history) {
-      window.history.scrollRestoration = "manual";
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual'
     }
 
     if (location.hash) {
-      const id = location.hash.replace("#", "");
+      // Fix ESLint warning: defer state update slightly so it's not synchronous
+      const loadingTimer = setTimeout(() => setIsScrolling(true), 0)
 
-      // We create an observer to watch for the element to be rendered AND have content
+      const id = location.hash.replace('#', '')
+      
       const observer = new MutationObserver((mutations, obs) => {
-        const el = document.getElementById(id);
-
-        // Check if the element exists and actually has children (the loaded data)
+        const el = document.getElementById(id)
+        
         if (el && el.children.length > 0) {
-          el.scrollIntoView({ behavior: "auto", block: "start" });
-          obs.disconnect(); // Stop observing once we've scrolled
+          el.scrollIntoView({ behavior: 'auto', block: 'start' })
+          obs.disconnect()
+          setIsScrolling(false) // Hide the overlay immediately
         }
-      });
+      })
 
-      // Start observing the body for changes (like data loading in)
       observer.observe(document.body, {
         childList: true,
         subtree: true,
-      });
+      })
 
-      // Fallback: If data takes too long, force the scroll after 2 seconds
       const fallbackTimer = setTimeout(() => {
-        const el = document.getElementById(id);
-        if (el) el.scrollIntoView({ behavior: "auto", block: "start" });
-        observer.disconnect();
-      }, 2000);
+        const el = document.getElementById(id)
+        if (el) el.scrollIntoView({ behavior: 'auto', block: 'start' })
+        observer.disconnect()
+        setIsScrolling(false) // Hide the overlay
+      }, 2000)
 
       return () => {
-        observer.disconnect();
-        clearTimeout(fallbackTimer);
-      };
+        observer.disconnect()
+        clearTimeout(loadingTimer)
+        clearTimeout(fallbackTimer)
+      }
     } else {
-      window.scrollTo({ top: 0, behavior: "auto" });
+      window.scrollTo({ top: 0, behavior: 'auto' })
     }
-  }, [location]);
+  }, [location])
 
-  return null;
+  return (
+    <>
+      {isScrolling && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-zinc-950 text-emerald-400">
+          <div className="flex flex-col items-center gap-4">
+            <div className="h-8 w-8 animate-spin rounded-full border-4 border-zinc-800 border-t-emerald-400"></div>
+            <p className="text-sm font-semibold tracking-widest uppercase">Loading...</p>
+          </div>
+        </div>
+      )}
+    </>
+  )
 }
 function HomePage() {
   const [ratings, setRatings] = useState({});
