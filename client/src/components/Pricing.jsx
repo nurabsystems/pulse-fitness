@@ -64,7 +64,7 @@ export function Pricing() {
   }
 
   return (
-    <section id="pricing" className="mx-auto max-w-6xl px-4 py-20 sm:py-24">
+    <section id="pricing" className="mx-auto max-w-6xl px-4 py-20 sm:py-24 min-h-screen">
       <header className="text-center">
         <h2 className="text-3xl font-bold text-white sm:text-4xl">
           Membership Plans

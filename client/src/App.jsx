@@ -16,43 +16,51 @@ import { ResetPassword } from "./pages/ResetPassword";
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import { Success } from "./pages/Success";
-
 function ScrollToHash() {
-  const location = useLocation()
+  const location = useLocation();
 
   useEffect(() => {
-    if ('scrollRestoration' in window.history) {
-      window.history.scrollRestoration = 'manual'
+    if ("scrollRestoration" in window.history) {
+      window.history.scrollRestoration = "manual";
     }
 
     if (location.hash) {
-      const id = location.hash.replace('#', '')
-      
-      // Poll until the element exists and the page has enough height
-      let attempts = 0;
-      const maxAttempts = 20; // Try for up to 1 second (20 * 50ms)
+      const id = location.hash.replace("#", "");
 
-      const attemptScroll = () => {
-        const el = document.getElementById(id)
-        if (el) {
-          el.scrollIntoView({ behavior: 'auto', block: 'start' })
-        } 
-        
-        // If element isn't found yet or page is still expanding from async data, retry
-        if (!el && attempts < maxAttempts) {
-          attempts++
-          setTimeout(attemptScroll, 50)
+      // We create an observer to watch for the element to be rendered AND have content
+      const observer = new MutationObserver((mutations, obs) => {
+        const el = document.getElementById(id);
+
+        // Check if the element exists and actually has children (the loaded data)
+        if (el && el.children.length > 0) {
+          el.scrollIntoView({ behavior: "auto", block: "start" });
+          obs.disconnect(); // Stop observing once we've scrolled
         }
-      }
+      });
 
-      // Initial delay to let React mount the components
-      setTimeout(attemptScroll, 100)
+      // Start observing the body for changes (like data loading in)
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+      });
+
+      // Fallback: If data takes too long, force the scroll after 2 seconds
+      const fallbackTimer = setTimeout(() => {
+        const el = document.getElementById(id);
+        if (el) el.scrollIntoView({ behavior: "auto", block: "start" });
+        observer.disconnect();
+      }, 2000);
+
+      return () => {
+        observer.disconnect();
+        clearTimeout(fallbackTimer);
+      };
     } else {
-      window.scrollTo({ top: 0, behavior: 'auto' })
+      window.scrollTo({ top: 0, behavior: "auto" });
     }
-  }, [location])
+  }, [location]);
 
-  return null
+  return null;
 }
 function HomePage() {
   const [ratings, setRatings] = useState({});
