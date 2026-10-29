@@ -18,33 +18,38 @@ import { useEffect } from "react";
 import { Success } from "./pages/Success";
 
 function ScrollToHash() {
-  const location = useLocation()
+  const location = useLocation();
 
   useEffect(() => {
-    // 1. Tell the browser to STOP restoring the scroll position on navigation
     if ('scrollRestoration' in window.history) {
-      window.history.scrollRestoration = 'manual'
+      window.history.scrollRestoration = 'manual';
     }
 
-    // 2. Handle the scrolling
     if (location.hash) {
-      const id = location.hash.replace('#', '')
-      const el = document.getElementById(id)
+      const id = location.hash.replace('#', '');
       
-      // We use a tiny delay to ensure the page has painted
-      setTimeout(() => {
+      // Use a small polling / requestAnimationFrame approach to wait until the element is rendered and positioned
+      let attempts = 0;
+      const maxAttempts = 10;
+
+      const attemptScroll = () => {
+        const el = document.getElementById(id);
         if (el) {
-          el.scrollIntoView({ behavior: 'auto', block: 'start' })
+          el.scrollIntoView({ behavior: 'auto', block: 'start' });
+        } else if (attempts < maxAttempts) {
+          attempts++;
+          setTimeout(attemptScroll, 50);
         }
-      }, 50)
+      };
+
+      setTimeout(attemptScroll, 50);
     } else {
-      window.scrollTo({ top: 0, behavior: 'auto' })
+      window.scrollTo({ top: 0, behavior: 'auto' });
     }
-  }, [location])
+  }, [location]);
 
-  return null
+  return null;
 }
-
 function HomePage() {
   const [ratings, setRatings] = useState({});
   const [matchedSpecialty, setMatchedSpecialty] = useState(null);
