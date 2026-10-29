@@ -1,5 +1,11 @@
 // client/src/App.jsx
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+  ScrollRestoration,
+} from "react-router-dom";
 import { useState } from "react";
 import { Header } from "./components/Header";
 import { Hero } from "./components/Hero";
@@ -21,25 +27,19 @@ function ScrollToHash() {
   const location = useLocation();
 
   useEffect(() => {
-    // If there's a hash in the URL (e.g., #pricing)
     if (location.hash) {
       const id = location.hash.replace("#", "");
 
-      // We use a small delay AND requestAnimationFrame to ensure
-      // all images and components have finished rendering
-      const timeoutId = setTimeout(() => {
-        const el = document.getElementById(id);
-        if (el) {
-          el.scrollIntoView({ behavior: "smooth", block: "start" });
-        }
-      }, 300); // 300ms is usually enough for the images to load
-
-      return () => clearTimeout(timeoutId);
+      // Using 'auto' instead of 'smooth' prevents the browser from canceling
+      // the scroll when layout shifts occur (like images loading).
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ behavior: "auto", block: "start" });
+      }
     } else {
-      // If there's no hash, scroll to top
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      window.scrollTo({ top: 0, behavior: "auto" });
     }
-  }, [location]); // This runs every time the URL changes
+  }, [location]);
 
   return null;
 }
@@ -83,6 +83,7 @@ function HomePage() {
 function App() {
   return (
     <BrowserRouter>
+      <ScrollRestoration />
       <ScrollToHash />
       <div className="min-h-screen bg-zinc-950 text-white">
         <Header />
