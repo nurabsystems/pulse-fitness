@@ -18,37 +18,41 @@ import { useEffect } from "react";
 import { Success } from "./pages/Success";
 
 function ScrollToHash() {
-  const location = useLocation();
+  const location = useLocation()
 
   useEffect(() => {
     if ('scrollRestoration' in window.history) {
-      window.history.scrollRestoration = 'manual';
+      window.history.scrollRestoration = 'manual'
     }
 
     if (location.hash) {
-      const id = location.hash.replace('#', '');
+      const id = location.hash.replace('#', '')
       
-      // Use a small polling / requestAnimationFrame approach to wait until the element is rendered and positioned
+      // Poll until the element exists and the page has enough height
       let attempts = 0;
-      const maxAttempts = 10;
+      const maxAttempts = 20; // Try for up to 1 second (20 * 50ms)
 
       const attemptScroll = () => {
-        const el = document.getElementById(id);
+        const el = document.getElementById(id)
         if (el) {
-          el.scrollIntoView({ behavior: 'auto', block: 'start' });
-        } else if (attempts < maxAttempts) {
-          attempts++;
-          setTimeout(attemptScroll, 50);
+          el.scrollIntoView({ behavior: 'auto', block: 'start' })
+        } 
+        
+        // If element isn't found yet or page is still expanding from async data, retry
+        if (!el && attempts < maxAttempts) {
+          attempts++
+          setTimeout(attemptScroll, 50)
         }
-      };
+      }
 
-      setTimeout(attemptScroll, 50);
+      // Initial delay to let React mount the components
+      setTimeout(attemptScroll, 100)
     } else {
-      window.scrollTo({ top: 0, behavior: 'auto' });
+      window.scrollTo({ top: 0, behavior: 'auto' })
     }
-  }, [location]);
+  }, [location])
 
-  return null;
+  return null
 }
 function HomePage() {
   const [ratings, setRatings] = useState({});
