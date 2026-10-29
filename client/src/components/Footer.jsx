@@ -1,13 +1,14 @@
-// Footer — brand, nav links, copyright.
+// client/src/components/Footer.jsx
+import { Link } from 'react-router-dom'
 
 const links = [
-  { href: "#hero", label: "Home" },
-  { href: "#about", label: "About" },
-  { href: "#classes", label: "Classes" },
-  { href: "#trainers", label: "Trainers" },
-  { href: "#pricing", label: "Pricing" },
-  { href: "#contact", label: "Contact" },
-];
+  { href: '#hero',     label: 'Home' },
+  { href: '#about',    label: 'About' },
+  { href: '#classes',  label: 'Classes' },
+  { href: '#trainers', label: 'Trainers' },
+  { href: '#pricing',  label: 'Pricing' },
+  { href: '#contact',  label: 'Contact' },
+]
 
 export function Footer() {
   return (
@@ -22,12 +23,13 @@ export function Footer() {
             <ul className="flex flex-wrap justify-center gap-4 sm:gap-6">
               {links.map((l) => (
                 <li key={l.href}>
-                  <a
-                    href={l.href}
+                  {/* CHANGED FROM <a> TO <Link> */}
+                  <Link
+                    to={`/${l.href}`}
                     className="text-sm text-zinc-400 transition-colors hover:text-emerald-400"
                   >
                     {l.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -39,5 +41,5 @@ export function Footer() {
         </p>
       </div>
     </footer>
-  );
+  )
 }

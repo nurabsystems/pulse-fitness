@@ -17,36 +17,22 @@ export function Login() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  async function handleSubmit(e) {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
+    async function handleSubmit(e) {
+    e.preventDefault()
+    setError('')
+    setLoading(true)
 
-    const { error: signinError } = await signIn.email({ email, password });
+    const { error: signinError } = await signIn.email({ email, password })
 
     if (signinError) {
-      setError(signinError.message || "Login failed. Try again.");
-      setLoading(false);
-      return;
+      setError(signinError.message || 'Login failed. Try again.')
+      setLoading(false)
+      return
     }
 
-    // 1. Decode the redirect URL to turn %23pricing back into #pricing
-    const decodedTarget = decodeURIComponent(redirectUrl);
-
-    // 2. Navigate to the decoded target
-    navigate(decodedTarget);
-
-    // 3. Force the browser to scroll to the hash after a brief delay
-    // (This ensures the Home page has fully mounted before scrolling)
-    if (decodedTarget.includes("#")) {
-      const targetId = decodedTarget.split("#")[1];
-      setTimeout(() => {
-        const element = document.getElementById(targetId);
-        if (element) {
-          element.scrollIntoView({ behavior: "smooth", block: "start" });
-        }
-      }, 150); // 150ms gives React time to render the HomePage
-    }
+    // Just navigate. App.jsx's ScrollToHash will handle the rest.
+    const decodedTarget = decodeURIComponent(redirectUrl)
+    navigate(decodedTarget)
   }
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-950 px-4 py-12">

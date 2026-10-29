@@ -18,24 +18,30 @@ import { useEffect } from "react";
 import { Success } from "./pages/Success";
 
 function ScrollToHash() {
-  const location = useLocation()
+  const location = useLocation();
 
   useEffect(() => {
+    // If there's a hash in the URL (e.g., #pricing)
     if (location.hash) {
-      const id = location.hash.replace('#', '')
-      const el = document.getElementById(id)
-      if (el) {
-        setTimeout(() => {
-          el.scrollIntoView({ behavior: 'smooth', block: 'start' })
-        }, 100)
-      }
-    } else {
-      // If there's no hash, scroll to top (Home)
-      window.scrollTo({ top: 0, behavior: 'smooth' })
-    }
-  }, [location])
+      const id = location.hash.replace("#", "");
 
-  return null
+      // We use a small delay AND requestAnimationFrame to ensure
+      // all images and components have finished rendering
+      const timeoutId = setTimeout(() => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }, 300); // 300ms is usually enough for the images to load
+
+      return () => clearTimeout(timeoutId);
+    } else {
+      // If there's no hash, scroll to top
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }, [location]); // This runs every time the URL changes
+
+  return null;
 }
 
 function HomePage() {
