@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pulse Fitness - Group A-2 Presentation</title>
+  <style>
+    :root {
+      --bg: #09090b;
+      --surface: #18181b;
+      --border: #27272a;
+      --text: #fafafa;
+      --muted: #a1a1aa;
+      --accent: #10b981;
+      --accent-hover: #34d399;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .slider-container {
+      width: 100%;
+      max-width: 1100px;
+      height: 90vh;
+      position: relative;
+    }
+
+    .slide {
+      display: none;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      padding: 4rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+      flex-direction: column;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .slide.active {
+      display: flex;
+      opacity: 1;
+    }
+
+    h1 {
+      font-size: 3rem;
+      font-weight: 800;
+      color: var(--accent);
+      margin-bottom: 1rem;
+      line-height: 1.2;
+    }
+
+    h2 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 2rem;
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 1rem;
+    }
+
+    h3 { font-size: 1.5rem; margin-bottom: 1rem; color: var(--accent); }
+
+    p, li {
+      font-size: 1.25rem;
+      line-height: 1.6;
+      color: var(--muted);
+      margin-bottom: 1rem;
+    }
+
+    ul { list-style-type: none; }
+    li::before { content: "→ "; color: var(--accent); font-weight: bold; }
+
+    .subtitle {
+      font-size: 1.5rem;
+      color: var(--muted);
+      margin-bottom: 3rem;
+    }
+
+    .diagram {
+      background: var(--bg);
+      padding: 2rem;
+      border-radius: 0.5rem;
+      border: 1px dashed var(--border);
+      font-family: monospace;
+      color: var(--accent);
+      font-size: 1rem;
+      line-height: 1.4;
+      white-space: pre;
+      text-align: center;
+      margin: 1rem 0;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      background: rgba(16, 185, 129, 0.1);
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      border-radius: 9999px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      margin-right: 0.5rem;
+    }
+
+    .controls {
+      position: absolute;
+      bottom: -4rem;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    button {
+      background: var(--border);
+      color: var(--text);
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    button:hover { background: var(--accent); color: var(--bg); }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .slide-counter {
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+    
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+    .card { background: var(--bg); padding: 1.5rem; border-radius: 0.5rem; border: 1px solid var(--border); }
+  </style>
+</head>
+<body>
+
+<div class="slider-container">
+  
+  <!-- SLIDE 1: Title -->
+  <div class="slide active">
+    <h1>Pulse Fitness</h1>
+    <p class="subtitle">Full-Stack SaaS Platform with Real Payment Integration</p>
+    <div>
+      <span class="badge">React</span>
+      <span class="badge">Express</span>
+      <span class="badge">Neon Postgres</span>
+      <span class="badge">Stripe</span>
+    </div>
+    <p style="margin-top: 3rem; font-size: 1rem;">Nurudeen Abdulsalam — Group A-2 Practicum</p>
+  </div>
+
+  <!-- SLIDE 2: The Architecture -->
+  <div class="slide">
+    <h2>System Architecture</h2>
+    <div class="diagram">
+[ Vercel ] ─── React Frontend
+    │
+    │ API Calls (JSON)
+    ▼
+[ Render ] ─── Express Backend
+    │
+    ├── Better Auth (Sessions)
+    │
+    ├── Drizzle ORM
+    ▼
+[ Neon Postgres ] ─── The Database
+    ▲
+    │ Webhooks (POST)
+    │
+[ Stripe ] ─── Payment Gateway
+    </div>
+    <p>A decoupled architecture where the frontend, backend, and database operate independently.</p>
+  </div>
+
+  <!-- SLIDE 3: Database -->
+  <div class="slide">
+    <h2>The Database Ledger</h2>
+    <div class="grid-2">
+      <div class="card">
+        <h3>Better Auth Tables</h3>
+        <ul>
+          <li><code>user</code></li>
+          <li><code>session</code></li>
+          <li><code>account</code></li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Core Data Tables</h3>
+        <ul>
+          <li><code>trainers</code></li>
+          <li><code>classes</code></li>
+          <li><code>pricing</code></li>
+        </ul>
+      </div>
+    </div>
+    <div class="card" style="margin-top: 1rem; border-color: var(--accent);">
+      <h3>The Payment Ledger</h3>
+      <p><code>orders</code> and <code>orderItems</code> act as a permanent transaction history. Even if a user buys 3 memberships, the database holds a complete receipt of every single purchase.</p>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: Checkout Flow -->
+  <div class="slide">
+    <h2>Stripe Checkout Flow</h2>
+    <ul>
+      <li><strong>Click:</strong> User clicks "Order Standard".</li>
+      <li><strong>Secure Lookup:</strong> Backend ignores the price sent by the browser and looks up the real price in Neon.</li>
+      <li><strong>Pending:</strong> A row is created in the <code>orders</code> table with <code>status: 'pending'</code>.</li>
+      <li><strong>Redirect:</strong> User is sent to Stripe's hosted checkout page.</li>
+      <li><strong>Payment:</strong> User pays with test card <code>4242 4242 4242 4242</code>.</li>
+    </ul>
+  </div>
+
+  <!-- SLIDE 5: The Webhook -->
+  <div class="slide">
+    <h2>The Webhook</h2>
+    <p>A webhook is a "reverse API". Stripe pushes data to us when a payment completes.</p>
+    <div class="diagram" style="text-align: left; font-size: 0.9rem;">
+// server/src/routes/webhook.js<br><br>
+// 1. Verify it's actually Stripe<br>
+const event = stripe.webhooks.constructEvent(req.body, sig, secret);<br><br>
+// 2. Mark the order as paid<br>
+if (event.type === 'checkout.session.completed') {<br>
+&nbsp;&nbsp;await db.update(orders).set({ status: 'paid' });<br>
+}
+    </div>
+    <p style="color: var(--accent); font-weight: bold;">The webhook is the ONLY authorized place to mark an order as paid.</p>
+  </div>
+
+  <!-- SLIDE 6: The Fallback -->
+  <div class="slide">
+    <h2>Seamless UX: The Fallback</h2>
+    <p>Webhooks can take 2–5 seconds to arrive. How do we stop the user from seeing a "Pending" screen?</p>
+    <div class="grid-2">
+      <div class="card">
+        <h3>Frontend Polling</h3>
+        <p><code>Success.jsx</code> checks the backend every 2 seconds.</p>
+      </div>
+      <div class="card">
+        <h3>Backend Verification</h3>
+        <p>If pending, the backend asks Stripe directly: "Is this paid?"</p>
+      </div>
+    </div>
+    <p style="margin-top: 1rem;">Result: The user always sees a seamless green checkmark.</p>
+  </div>
+
+  <!-- SLIDE 7: Challenges -->
+  <div class="slide">
+    <h2>Production Challenges</h2>
+    <ul>
+      <li><strong>CORS & Cookies:</strong> Configured <code>trust proxy</code> on Render and <code>SameSite=None</code> to allow Vercel cookies.</li>
+      <li><strong>Stripe API v2026:</strong> Removed the deprecated <code>payment_method_types</code> parameter.</li>
+      <li><strong>Webhook Security:</strong> Used <code>express.raw()</code> to preserve the raw body for signature verification.</li>
+      <li><strong>SPA Routing:</strong> Added <code>vercel.json</code> rewrites to stop 404s on <code>/success</code>.</li>
+    </ul>
+  </div>
+
+  <!-- SLIDE 8: Future Work -->
+  <div class="slide">
+    <h2>Future Work</h2>
+    <ul>
+      <li><strong>Dockerization:</strong> Containerize frontend and backend to ensure identical dev and production environments.</li>
+      <li><strong>CI/CD:</strong> GitHub Actions to run tests on every push.</li>
+      <li><strong>Monitoring:</strong> Integrate Sentry for error tracking.</li>
+      <li><strong>Real Emails:</strong> Connect Resend to Stripe for automated PDF invoices.</li>
+    </ul>
+  </div>
+
+  <!-- SLIDE 9: Conclusion -->
+  <div class="slide">
+    <h1>Thank You</h1>
+    <p class="subtitle">Questions?</p>
+  </div>
+
+  <!-- Controls -->
+  <div class="controls">
+    <button id="prevBtn" onclick="changeSlide(-1)">← Previous</button>
+    <span class="slide-counter" id="counter">1 / 9</span>
+    <button id="nextBtn" onclick="changeSlide(1)">Next →</button>
+  </div>
+
+</div>
+
+<script>
+  let currentSlide = 0;
+  const slides = document.querySelectorAll('.slide');
+  const counter = document.getElementById('counter');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+
+  function showSlide(index) {
+    slides.forEach(s => s.classList.remove('active'));
+    slides[index].classList.add('active');
+    
+    counter.textContent = `${index + 1} / ${slides.length}`;
+    prevBtn.disabled = index === 0;
+    nextBtn.disabled = index === slides.length - 1;
+  }
+
+  function changeSlide(direction) {
+    currentSlide += direction;
+    if (currentSlide < 0) currentSlide = 0;
+    if (currentSlide >= slides.length) currentSlide = slides.length - 1;
+    showSlide(currentSlide);
+  }
+
+  // Keyboard navigation
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight') changeSlide(1);
+    if (e.key === 'ArrowLeft') changeSlide(-1);
+  });
+
+  showSlide(0);
+</script>
+
+</body>
+</html>
