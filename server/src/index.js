@@ -12,6 +12,9 @@ import { auth } from './lib/auth.js';
 import { checkoutRouter } from './routes/checkout.js';
 import { webhookRouter } from './routes/webhook.js';
 import { ordersRouter } from './routes/orders.js';
+import { usersRouter } from './routes/users.js';
+
+
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -31,6 +34,9 @@ app.use('/api/webhook', webhookRouter);
 
 // ordersRouter added BEFORE express.json()
 app.use('/api/orders', ordersRouter);
+
+// usersRouter added BEFORE express.json()
+app.use('/api/users', usersRouter);
 
 
 app.use(express.json());

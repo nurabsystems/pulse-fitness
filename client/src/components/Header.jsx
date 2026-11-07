@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useSession, signOut } from "../lib/auth-client";
-import { Link } from 'react-router-dom'
+import { Link } from "react-router-dom";
 
 const links = [
   { href: "#hero", label: "Home" },
@@ -21,7 +21,7 @@ export function Header() {
     <header className="sticky top-0 z-50 border-b border-zinc-800 bg-zinc-950/80 backdrop-blur">
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
         <Link
-          to="#hero"
+          to="/"
           className="flex items-center gap-2 text-lg font-bold text-white"
           aria-label="Pulse Fitness — Home"
         >
@@ -42,26 +42,34 @@ export function Header() {
         </Link>
 
         {/* Desktop nav */}
-       <ul className="hidden items-center gap-6 sm:flex">
-  {links.map((l) => (
-    <li key={l.href}>
-      <Link
-        to={`/${l.href}`}
-        className="text-sm font-semibold text-zinc-300 transition-colors hover:text-emerald-400"
-      >
-        {l.label}
-      </Link>
-    </li>
-  ))}
+        <ul className="hidden items-center gap-6 sm:flex">
+          {links.map((l) => (
+            <li key={l.href}>
+              <Link
+                to={`/${l.href}`}
+                className="text-sm font-semibold text-zinc-300 transition-colors hover:text-emerald-400"
+              >
+                {l.label}
+              </Link>
+            </li>
+          ))}
 
           {session?.user ? (
-            <li className="flex items-center gap-3">
+            <li className="flex items-center gap-4">
               <span className="flex items-center gap-2 rounded-full border border-zinc-800 px-3 py-1.5 text-xs font-semibold text-zinc-300">
                 <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-400 text-[10px] font-bold text-black">
                   {session.user.name?.charAt(0).toUpperCase() || "?"}
                 </span>
                 {session.user.name}
               </span>
+
+              <Link
+                to="/dashboard"
+                className="text-sm font-semibold text-emerald-400 transition hover:text-emerald-300"
+              >
+                Dashboard
+              </Link>
+
               <button
                 onClick={() => signOut()}
                 className="text-sm font-semibold text-red-400 transition hover:text-red-300"
@@ -122,9 +130,9 @@ export function Header() {
         </button>
       </nav>
 
-      {/* Mobile menu — wrapped in ul */}
+      {/* Mobile menu */}
       {isMenuOpen && (
-        <ul className="border-t border-zinc-800 bg-zinc-950 px-4 pb-4 sm:hidden">
+        <ul className="border-t border-zinc-800 bg-zinc-950 px-4 py-4 sm:hidden">
           {links.map((l) => (
             <li key={l.href}>
               <Link
@@ -138,31 +146,41 @@ export function Header() {
           ))}
 
           {session?.user ? (
-            <li className="mt-2 border-t border-zinc-800 pt-3">
-              <div className="flex items-center justify-between">
-                <span className="flex items-center gap-2 text-sm font-semibold text-zinc-300">
-                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-400 text-[11px] font-bold text-black">
-                    {session.user.name?.charAt(0).toUpperCase() || "?"}
+            <li className="mt-3 border-t border-zinc-800 pt-4">
+              <div className="flex flex-col gap-3">
+                <div className="flex items-center justify-between">
+                  <span className="flex items-center gap-2 text-sm font-semibold text-zinc-300">
+                    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-400 text-[11px] font-bold text-black">
+                      {session.user.name?.charAt(0).toUpperCase() || "?"}
+                    </span>
+                    {session.user.name}
                   </span>
-                  {session.user.name}
-                </span>
-                <button
-                  onClick={() => {
-                    setIsMenuOpen(false);
-                    signOut();
-                  }}
-                  className="text-xs font-semibold text-red-400"
+                  <button
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                      signOut();
+                    }}
+                    className="text-xs font-semibold text-red-400 transition hover:text-red-300"
+                  >
+                    Sign Out
+                  </button>
+                </div>
+
+                <Link
+                  to="/dashboard"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="block rounded-lg bg-zinc-900 py-2.5 text-center text-sm font-semibold text-emerald-400 border border-zinc-800 transition hover:bg-zinc-800"
                 >
-                  Sign Out
-                </button>
+                  Dashboard
+                </Link>
               </div>
             </li>
           ) : (
-            <li className="mt-2 border-t border-zinc-800 pt-3">
+            <li className="mt-3 border-t border-zinc-800 pt-4">
               <Link
                 to="/login"
                 onClick={() => setIsMenuOpen(false)}
-                className="block rounded-full bg-emerald-400 px-4 py-2 text-center text-sm font-semibold text-black"
+                className="block rounded-full bg-emerald-400 px-4 py-2 text-center text-sm font-semibold text-black transition hover:bg-emerald-500"
               >
                 Sign In
               </Link>
