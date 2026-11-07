@@ -10,25 +10,41 @@ export function Classes() {
   const [error, setError] = useState(null)
 
   useEffect(() => {
-    let cancelled = false
+  let cancelled = false;
 
-    async function load() {
-      try {
-        setLoading(true)
-        setError(null)
-        const data = await api.getClasses()
-        if (!cancelled) setClasses(data.classes)
-      } catch (err) {
-        if (!cancelled) setError(err.message)
-      } finally {
-        if (!cancelled) setLoading(false)
+  async function load() {
+    try {
+      setLoading(true);
+      setError(null);
+      const data = await api.getClasses();
+      if (!cancelled) setClasses(data.classes);
+    } catch (err) {
+      if (!cancelled) {
+        console.warn('First fetch failed, retrying in 2s...', err);
+        // Wait 2 seconds for Neon to wake up, then retry
+        setTimeout(async () => {
+          try {
+            const data = await api.getClasses();
+            if (!cancelled) {
+              setClasses(data.classes);
+              setError(null);
+            }
+          } catch (retryErr) {
+            if (!cancelled) setError(retryErr.message);
+          } finally {
+            if (!cancelled) setLoading(false);
+          }
+        }, 2000);
+        return; // Don't set loading to false yet
       }
+    } finally {
+      if (!cancelled && !error) setLoading(false);
     }
+  }
 
-    load()
-    return () => { cancelled = true }
-  }, [])
-
+  load();
+  return () => { cancelled = true; };
+}, []);
   return (
     <section id="classes" className="mx-auto max-w-6xl px-4 py-16 sm:py-20">
       <header className="text-center">
