@@ -7,10 +7,13 @@ build/
 
 # Environment files — NEVER commit
 .env
+.env.development
+.env.production
 .env.local
 .env.*.local
 server/.env
-client/.env
+client/.env.development
+client/.env.production
 
 # Logs
 *.log
