@@ -1,79 +1,83 @@
 // client/src/components/Trainers.jsx
-// Fetches trainers from the Express API.
-// Handles loading, error, filtering, quiz integration, and rating state.
+// This component fetches trainers from the API.
+// It retries once if the first fetch fails (handles Neon cold starts).
 
-import { useState, useEffect } from 'react'
-import { api } from '../lib/api'
-import { TrainerCard } from './TrainerCard'
-import { TrainerMatch } from './TrainerMatch'
+import { useState, useEffect } from 'react';
+import { api } from '../lib/api';
+import { TrainerCard } from './TrainerCard';
+import { TrainerMatch } from './TrainerMatch';
 
-const specialties = ['All', 'HIIT', 'Strength', 'Yoga']
+const specialties = ['All', 'HIIT', 'Strength', 'Yoga'];
 
 export function Trainers({ ratings, onRate, matchedSpecialty, onMatch, userName }) {
-  // ---------- Data state ----------
-  const [trainers, setTrainers] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
+  const [trainers, setTrainers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // ---------- UI state ----------
-  const [filter, setFilter] = useState('All')
-  const [resetKey, setResetKey] = useState(0)
-  const [quizMode, setQuizMode] = useState('entrance')
+  const [filter, setFilter] = useState('All');
+  const [resetKey, setResetKey] = useState(0);
+  const [quizMode, setQuizMode] = useState('entrance');
 
-  // ---------- Fetch trainers from API on mount ----------
-useEffect(() => {
-  let cancelled = false;
+  useEffect(() => {
+    let cancelled = false;
 
-  async function load() {
-    try {
+    function load() {
       setLoading(true);
       setError(null);
-      const data = await api.getTrainers();
-      if (!cancelled) setTrainers(data.trainers);
-    } catch (err) {
-      if (!cancelled) {
-        console.warn('First fetch failed, retrying in 2s...', err);
-        // Wait 2 seconds for Neon to wake up, then retry
-        setTimeout(async () => {
-          try {
-            const data = await api.getTrainers();
-            if (!cancelled) {
-              setTrainers(data.trainers);
-              setError(null);
-            }
-          } catch (retryErr) {
-            if (!cancelled) setError(retryErr.message);
-          } finally {
-            if (!cancelled) setLoading(false);
+
+      api
+        .getTrainers()
+        .then((data) => {
+          if (!cancelled) {
+            setTrainers(data.trainers);
+            setLoading(false);
           }
-        }, 2000);
-        return; // Don't set loading to false yet
-      }
-    } finally {
-      if (!cancelled && !error) setLoading(false);
+        })
+        .catch((err) => {
+          if (cancelled) return;
+          console.warn('First fetch failed, retrying in 2s...', err);
+
+          setTimeout(() => {
+            api
+              .getTrainers()
+              .then((data) => {
+                if (!cancelled) {
+                  setTrainers(data.trainers);
+                  setError(null);
+                  setLoading(false);
+                }
+              })
+              .catch((retryErr) => {
+                if (!cancelled) {
+                  setError(retryErr.message);
+                  setLoading(false);
+                }
+              });
+          }, 2000);
+        });
     }
-  }
 
-  load();
-  return () => { cancelled = true; };
-}, []);
-  // ---------- Derived filtered list ----------
-  const activeFilter = matchedSpecialty || filter
-  const filtered = activeFilter === 'All'
-    ? trainers
-    : trainers.filter((t) => t.specialty === activeFilter)
+    load();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
-  // ---------- Handlers ----------
+  const activeFilter = matchedSpecialty || filter;
+  const filtered =
+    activeFilter === 'All'
+      ? trainers
+      : trainers.filter((t) => t.specialty === activeFilter);
+
   function handleClearMatch() {
-    onMatch(null)
-    setFilter('All')
-    setQuizMode('entrance')
-    setResetKey((k) => k + 1)
+    onMatch(null);
+    setFilter('All');
+    setQuizMode('entrance');
+    setResetKey((k) => k + 1);
   }
 
-  const showFilters = !matchedSpecialty && quizMode === 'entrance'
+  const showFilters = !matchedSpecialty && quizMode === 'entrance';
 
-  // ---------- Render ----------
   return (
     <section id="trainers" className="mx-auto max-w-6xl px-4 py-16 sm:py-20">
       <header className="text-center">
@@ -117,14 +121,14 @@ useEffect(() => {
         )}
       </div>
 
-      {/* ---------- Loading state ---------- */}
+      {/* Loading state */}
       {loading && (
         <div className="mt-12 text-center">
           <p className="text-zinc-500">Loading trainers from the database...</p>
         </div>
       )}
 
-      {/* ---------- Error state ---------- */}
+      {/* Error state */}
       {error && (
         <div className="mt-12 text-center">
           <p className="text-red-400">Failed to load trainers: {error}</p>
@@ -141,10 +145,9 @@ useEffect(() => {
         </div>
       )}
 
-      {/* ---------- Data-loaded state ---------- */}
+      {/* Data-loaded state */}
       {!loading && !error && (
         <>
-          {/* Filter buttons — hidden during quiz/match */}
           {showFilters && (
             <div className="mt-10 flex flex-wrap justify-center gap-2">
               {specialties.map((s) => (
@@ -165,12 +168,10 @@ useEffect(() => {
             </div>
           )}
 
-          {/* Result count */}
           <p className="mt-6 text-center text-sm text-zinc-500">
             Showing {filtered.length} {filtered.length === 1 ? 'trainer' : 'trainers'}
           </p>
 
-          {/* Trainer grid */}
           <div className="mt-8 flex flex-wrap justify-center gap-6">
             {filtered.map((trainer) => (
               <div
@@ -188,5 +189,5 @@ useEffect(() => {
         </>
       )}
     </section>
-  )
+  );
 }

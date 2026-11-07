@@ -1,50 +1,60 @@
 // client/src/components/Classes.jsx
-// Fetches classes from the API.
+// This component fetches the class schedule from the API.
+// It retries once if the first fetch fails (handles Neon cold starts).
 
-import { useState, useEffect } from 'react'
-import { api } from '../lib/api'
+import { useState, useEffect } from 'react';
+import { api } from '../lib/api';
 
 export function Classes() {
-  const [classes, setClasses] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
+  const [classes, setClasses] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-  let cancelled = false;
+    let cancelled = false;
 
-  async function load() {
-    try {
+    function load() {
       setLoading(true);
       setError(null);
-      const data = await api.getClasses();
-      if (!cancelled) setClasses(data.classes);
-    } catch (err) {
-      if (!cancelled) {
-        console.warn('First fetch failed, retrying in 2s...', err);
-        // Wait 2 seconds for Neon to wake up, then retry
-        setTimeout(async () => {
-          try {
-            const data = await api.getClasses();
-            if (!cancelled) {
-              setClasses(data.classes);
-              setError(null);
-            }
-          } catch (retryErr) {
-            if (!cancelled) setError(retryErr.message);
-          } finally {
-            if (!cancelled) setLoading(false);
-          }
-        }, 2000);
-        return; // Don't set loading to false yet
-      }
-    } finally {
-      if (!cancelled && !error) setLoading(false);
-    }
-  }
 
-  load();
-  return () => { cancelled = true; };
-}, []);
+      api
+        .getClasses()
+        .then((data) => {
+          if (!cancelled) {
+            setClasses(data.classes);
+            setLoading(false);
+          }
+        })
+        .catch((err) => {
+          if (cancelled) return;
+          console.warn('First fetch failed, retrying in 2s...', err);
+
+          setTimeout(() => {
+            api
+              .getClasses()
+              .then((data) => {
+                if (!cancelled) {
+                  setClasses(data.classes);
+                  setError(null);
+                  setLoading(false);
+                }
+              })
+              .catch((retryErr) => {
+                if (!cancelled) {
+                  setError(retryErr.message);
+                  setLoading(false);
+                }
+              });
+          }, 2000);
+        });
+    }
+
+    load();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   return (
     <section id="classes" className="mx-auto max-w-6xl px-4 py-16 sm:py-20">
       <header className="text-center">
@@ -125,5 +135,5 @@ export function Classes() {
         </>
       )}
     </section>
-  )
+  );
 }

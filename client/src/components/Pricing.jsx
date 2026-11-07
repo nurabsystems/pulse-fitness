@@ -1,79 +1,88 @@
 // client/src/components/Pricing.jsx
-// Fetches pricing plans from the API.
+// This component fetches the pricing plans from the API.
+// It retries once if the first fetch fails (handles Neon cold starts).
 
-import { useState, useEffect } from 'react'
-import { api } from '../lib/api'
+import { useState, useEffect } from 'react';
+import { api } from '../lib/api';
 import { useNavigate } from 'react-router-dom';
 
 export function Pricing() {
+  const [pricingPlans, setPricingPlans] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
-  const [pricingPlans, setPricingPlans] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
-  
 
   useEffect(() => {
-  let cancelled = false;
+    let cancelled = false;
 
-  async function load() {
-    try {
+    function load() {
       setLoading(true);
       setError(null);
-      const data = await api.getPricing();
-      if (!cancelled) setPricingPlans(data.pricing);
-    } catch (err) {
-      if (!cancelled) {
-        console.warn('First fetch failed, retrying in 2s...', err);
-        // Wait 2 seconds for Neon to wake up, then retry
-        setTimeout(async () => {
-          try {
-            const data = await api.getPricing();
-            if (!cancelled) {
-              setPricingPlans(data.pricing);
-              setError(null);
-            }
-          } catch (retryErr) {
-            if (!cancelled) setError(retryErr.message);
-          } finally {
-            if (!cancelled) setLoading(false);
-          }
-        }, 2000);
-        return; // Don't set loading to false yet
-      }
-    } finally {
-      if (!cancelled && !error) setLoading(false);
-    }
-  }
 
-  load();
-  return () => { cancelled = true; };
-}, []);
+      api
+        .getPricing()
+        .then((data) => {
+          if (!cancelled) {
+            setPricingPlans(data.pricing);
+            setLoading(false);
+          }
+        })
+        .catch((err) => {
+          if (cancelled) return;
+          console.warn('First fetch failed, retrying in 2s...', err);
+
+          // Retry once after 2 seconds
+          setTimeout(() => {
+            api
+              .getPricing()
+              .then((data) => {
+                if (!cancelled) {
+                  setPricingPlans(data.pricing);
+                  setError(null);
+                  setLoading(false);
+                }
+              })
+              .catch((retryErr) => {
+                if (!cancelled) {
+                  setError(retryErr.message);
+                  setLoading(false);
+                }
+              });
+          }, 2000);
+        });
+    }
+
+    load();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   async function handleCheckout(pricingId) {
     try {
-      // 1. Call the backend checkout route
-      const response = await fetch('https://pulse-fitness-y1fa.onrender.com/api/checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include', // Sends the session cookie!
-        body: JSON.stringify({ pricingId }),
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL || 'https://pulse-fitness-y1fa.onrender.com/api'}/checkout`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ pricingId }),
+        }
+      );
 
       const data = await response.json();
 
       if (!response.ok) {
         if (response.status === 401) {
-          navigate('/login?reason=auth&redirect=/%23pricing'); 
+          navigate('/login?reason=auth&redirect=/%23pricing');
           return;
         }
         throw new Error(data.error || 'Checkout failed');
       }
 
-      // 2. Redirect to Stripe's hosted checkout page
       if (data.url) {
         window.location.assign(data.url);
       }
-
     } catch (error) {
       console.error('Checkout error:', error);
       alert('Could not start checkout. Please try again.');
@@ -81,14 +90,12 @@ export function Pricing() {
   }
 
   return (
-    <section id="pricing" className="mx-auto max-w-6xl px-4 py-20 sm:py-24 min-h-screen">
+    <section id="pricing" className="mx-auto max-w-6xl px-4 py-20 sm:py-24">
       <header className="text-center">
         <h2 className="text-3xl font-bold text-white sm:text-4xl">
           Membership Plans
         </h2>
-        <p className="mt-2 text-zinc-400">
-          Simple pricing. Cancel anytime.
-        </p>
+        <p className="mt-2 text-zinc-400">Simple pricing. Cancel anytime.</p>
       </header>
 
       {loading && (
@@ -166,5 +173,5 @@ export function Pricing() {
         </div>
       )}
     </section>
-  )
+  );
 }
