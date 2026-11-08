@@ -34,9 +34,9 @@ export const auth = betterAuth({
   },
   // 👇 THIS IS THE FIX
   advanced: {
+    useSecureCookies: process.env.NODE_ENV === 'production',
     defaultCookieAttributes: {
-      sameSite: "none",
-      secure: true,
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
     },
   },
 });
