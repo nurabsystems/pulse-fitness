@@ -18,7 +18,7 @@ const app = express();
 const PORT = process.env.PORT || 4000;
 
 // =========================================================
-// 1. CORS Configuration (Fixes local dev and production)
+// 1. CORS Configuration
 // =========================================================
 const allowedOrigins = [
   'http://localhost:5173',
@@ -33,7 +33,7 @@ app.use(
         return callback(null, true);
       } else {
         console.error(`Blocked by CORS: ${origin}`);
-        return callback(new Error('Not allowed by CORS'));
+        return callback(null, false);
       }
     },
     credentials: true,
@@ -41,24 +41,22 @@ app.use(
 );
 
 // =========================================================
-// 2. Better Auth (BEFORE express.json())
+// 2. Better Auth (needs raw body)
 // =========================================================
 app.all('/api/auth/*splat', toNodeHandler(auth));
 
 // =========================================================
-// 3. Raw Body Routes (Webhook & Orders)
+// 3. Stripe Webhook (needs raw body)
 // =========================================================
 app.use('/api/webhook', webhookRouter);
-app.use('/api/orders', ordersRouter);
-app.use('/api/users', usersRouter);
 
 // =========================================================
-// 4. JSON Body Parser
+// 4. JSON Body Parser (BEFORE all other API routes)
 // =========================================================
 app.use(express.json());
 
 // =========================================================
-// 5. Standard Routes
+// 5. All other API routes (now with parsed JSON body)
 // =========================================================
 app.get('/api/health', async (req, res) => {
   try {
@@ -73,6 +71,8 @@ app.use('/api/trainers', trainersRouter);
 app.use('/api/classes', classesRouter);
 app.use('/api/pricing', pricingRouter);
 app.use('/api/checkout', checkoutRouter);
+app.use('/api/orders', ordersRouter);
+app.use('/api/users', usersRouter);
 
 // =========================================================
 // 6. 404 Fallback
