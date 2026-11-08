@@ -17,29 +17,49 @@ import { usersRouter } from './routes/users.js';
 const app = express();
 const PORT = process.env.PORT || 4000;
 
-// Middleware
-app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:5173',
-  credentials: true,
-}));
+// =========================================================
+// 1. CORS Configuration (Fixes local dev and production)
+// =========================================================
+const allowedOrigins = [
+  'http://localhost:5173',
+  'https://pulse-fitness-tdsz.vercel.app',
+];
 
-// Better Auth BEFORE express.json() — it needs the raw body
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      } else {
+        console.error(`Blocked by CORS: ${origin}`);
+        return callback(new Error('Not allowed by CORS'));
+      }
+    },
+    credentials: true,
+  })
+);
+
+// =========================================================
+// 2. Better Auth (BEFORE express.json())
+// =========================================================
 app.all('/api/auth/*splat', toNodeHandler(auth));
 
-// webhookRouter  added  BEFORE express.json()
+// =========================================================
+// 3. Raw Body Routes (Webhook & Orders)
+// =========================================================
 app.use('/api/webhook', webhookRouter);
-
-
-// ordersRouter added BEFORE express.json()
 app.use('/api/orders', ordersRouter);
-
-// usersRouter added BEFORE express.json()
 app.use('/api/users', usersRouter);
 
-
+// =========================================================
+// 4. JSON Body Parser
+// =========================================================
 app.use(express.json());
 
-// Health check — proves the server is up
+// =========================================================
+// 5. Standard Routes
+// =========================================================
 app.get('/api/health', async (req, res) => {
   try {
     const now = await testConnection();
@@ -49,17 +69,21 @@ app.get('/api/health', async (req, res) => {
   }
 });
 
-// Routes
 app.use('/api/trainers', trainersRouter);
 app.use('/api/classes', classesRouter);
 app.use('/api/pricing', pricingRouter);
 app.use('/api/checkout', checkoutRouter);
-// 404 fallback
+
+// =========================================================
+// 6. 404 Fallback
+// =========================================================
 app.use((req, res) => {
   res.status(404).json({ error: 'Route not found' });
 });
 
-// Start
+// =========================================================
+// 7. Start Server
+// =========================================================
 app.listen(PORT, () => {
   console.log(`Pulse Fitness API running on http://localhost:${PORT}`);
 });
