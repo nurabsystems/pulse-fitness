@@ -17,4 +17,4 @@ usersRouter.put('/me', requireAuth, usersController.updateMyProfile);
 
 // 4. Route to update the user's avatar image URL
 // URL: PUT /api/users/me/avatar
-usersRouter.put('/me/avatar', requireAuth, usersController.uploadAvatar);
+usersRouter.post('/me/avatar', requireAuth, usersController.uploadAvatar);
