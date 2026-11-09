@@ -1,4 +1,5 @@
 // src/lib/auth.js
+import 'dotenv/config';
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { db } from "../db/index.js";
@@ -25,18 +26,18 @@ export const auth = betterAuth({
     requireEmailVerification: false,
     minPasswordLength: 8,
     sendResetPassword: async ({ user, url }) => {
-      console.log("\n═══════════════════════════════════════");
-      console.log(`📧 PASSWORD RESET REQUEST`);
-      console.log(`   User: ${user.email}`);
-      console.log(`   URL: ${url}`);
-      console.log("═══════════════════════════════════════\n");
+      console.log(`📧 Password reset for ${user.email}: ${url}`);
     },
   },
-  // 👇 THIS IS THE FIX
   advanced: {
-    useSecureCookies: process.env.NODE_ENV === 'production',
+    // This is the ONLY reliable way to disable __Secure- prefix in Better Auth 1.x
+    useSecureCookies: false,
+    cookiePrefix: "",
     defaultCookieAttributes: {
-      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      sameSite: 'lax',
+      secure: false,
+      httpOnly: true,
+      path: '/',
     },
   },
 });

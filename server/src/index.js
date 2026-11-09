@@ -1,6 +1,7 @@
 // src/index.js — the Express server entry point
 
 import 'dotenv/config';
+import { fixCookies } from './middleware/fixCookies.js';
 import express from 'express';
 import cors from 'cors';
 import { testConnection } from './db/index.js';
@@ -40,10 +41,15 @@ app.use(
   })
 );
 
+//before better auth middleware, apply the fixCookies middleware to handle cookie issues in development
+
+app.use(fixCookies); // Apply the fixCookies middleware
+
 // =========================================================
 // 2. Better Auth (needs raw body)
 // =========================================================
 app.all('/api/auth/*splat', toNodeHandler(auth));
+
 
 // =========================================================
 // 3. Stripe Webhook (needs raw body)
