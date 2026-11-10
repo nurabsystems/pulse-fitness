@@ -30,7 +30,7 @@ export function Login() {
     }
 
     // Force the auth client to re-fetch the session from the server
-    await authClient.getSession({ forceFetch: true });
+    await authClient.getSession();
 
     // Full page reload so useSession() picks up the fresh session
     window.location.href = decodeURIComponent(redirectUrl);
