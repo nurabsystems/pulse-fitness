@@ -1,4 +1,5 @@
-// Header — sticky nav with mobile hamburger menu and auth state.
+// client/src/components/Header.jsx
+// Sticky nav with mobile hamburger menu and auth state (including Admin link for both views).
 
 import { useState } from "react";
 import { useSession, signOut } from "../lib/auth-client";
@@ -16,6 +17,9 @@ const links = [
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { data: session } = useSession();
+
+  // Check if the current user is an admin
+  const isAdmin = session?.user?.role === "admin";
 
   return (
     <header className="sticky top-0 z-50 border-b border-zinc-800 bg-zinc-950/80 backdrop-blur">
@@ -41,7 +45,7 @@ export function Header() {
           </span>
         </Link>
 
-        {/* Desktop nav */}
+        {/* --- Desktop Navigation --- */}
         <ul className="hidden items-center gap-6 sm:flex">
           {links.map((l) => (
             <li key={l.href}>
@@ -56,6 +60,7 @@ export function Header() {
 
           {session?.user ? (
             <li className="flex items-center gap-4">
+              {/* User Badge */}
               <span className="flex items-center gap-2 rounded-full border border-zinc-800 px-3 py-1.5 text-xs font-semibold text-zinc-300">
                 <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-400 text-[10px] font-bold text-black">
                   {session.user.name?.charAt(0).toUpperCase() || "?"}
@@ -63,6 +68,7 @@ export function Header() {
                 {session.user.name}
               </span>
 
+              {/* Dashboard Link */}
               <Link
                 to="/dashboard"
                 className="text-sm font-semibold text-emerald-400 transition hover:text-emerald-300"
@@ -70,6 +76,17 @@ export function Header() {
                 Dashboard
               </Link>
 
+              {/* Admin Link (only for admins) */}
+              {isAdmin && (
+                <Link
+                  to="/admin"
+                  className="text-sm font-semibold text-amber-400 transition hover:text-amber-300"
+                >
+                  Admin
+                </Link>
+              )}
+
+              {/* Sign Out */}
               <button
                 onClick={() => signOut()}
                 className="text-sm font-semibold text-red-400 transition hover:text-red-300"
@@ -89,7 +106,7 @@ export function Header() {
           )}
         </ul>
 
-        {/* Hamburger — mobile only */}
+        {/* --- Hamburger (mobile only) --- */}
         <button
           type="button"
           onClick={() => setIsMenuOpen((open) => !open)}
@@ -130,7 +147,7 @@ export function Header() {
         </button>
       </nav>
 
-      {/* Mobile menu */}
+      {/* --- Mobile Menu --- */}
       {isMenuOpen && (
         <ul className="border-t border-zinc-800 bg-zinc-950 px-4 py-4 sm:hidden">
           {links.map((l) => (
@@ -148,6 +165,7 @@ export function Header() {
           {session?.user ? (
             <li className="mt-3 border-t border-zinc-800 pt-4">
               <div className="flex flex-col gap-3">
+                {/* User Row */}
                 <div className="flex items-center justify-between">
                   <span className="flex items-center gap-2 text-sm font-semibold text-zinc-300">
                     <span className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-400 text-[11px] font-bold text-black">
@@ -166,6 +184,7 @@ export function Header() {
                   </button>
                 </div>
 
+                {/* Dashboard Button */}
                 <Link
                   to="/dashboard"
                   onClick={() => setIsMenuOpen(false)}
@@ -173,6 +192,17 @@ export function Header() {
                 >
                   Dashboard
                 </Link>
+
+                {/* Admin Button (only for admins) */}
+                {isAdmin && (
+                  <Link
+                    to="/admin"
+                    onClick={() => setIsMenuOpen(false)}
+                    className="block rounded-lg bg-amber-500/10 py-2.5 text-center text-sm font-semibold text-amber-400 border border-amber-500/30 transition hover:bg-amber-500/20"
+                  >
+                    Admin Dashboard
+                  </Link>
+                )}
               </div>
             </li>
           ) : (

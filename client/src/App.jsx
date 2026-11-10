@@ -17,6 +17,7 @@ import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import { Success } from "./pages/Success";
 import { MemberDashboard } from "./pages/MemberDashboard";
+import { AdminDashboard } from './pages/AdminDashboard';
 function ScrollToHash() {
   const location = useLocation()
   const [isScrolling, setIsScrolling] = useState(false)
@@ -127,6 +128,7 @@ function App() {
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/success" element={<Success />} />
           <Route path="/dashboard" element={<MemberDashboard />} />
+          <Route path="/admin" element={<AdminDashboard />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
         <Footer />
