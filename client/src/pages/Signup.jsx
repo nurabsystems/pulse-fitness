@@ -1,42 +1,45 @@
 // client/src/pages/Signup.jsx
-import { useState } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
-import { signUp } from '../lib/auth-client'
-import { PasswordInput } from '../components/PasswordInput'
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { signUp, authClient } from '../lib/auth-client';
+import { PasswordInput } from '../components/PasswordInput';
 
 export function Signup() {
-  const navigate = useNavigate()
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
-  const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e) {
-    e.preventDefault()
-    setError('')
+    e.preventDefault();
+    setError('');
 
     if (password.length < 8) {
-      setError('Password must be at least 8 characters.')
-      return
+      setError('Password must be at least 8 characters.');
+      return;
     }
 
     if (password !== confirmPassword) {
-      setError('Passwords do not match.')
-      return
+      setError('Passwords do not match.');
+      return;
     }
 
-    setLoading(true)
-    const { error: signupError } = await signUp.email({ name, email, password })
+    setLoading(true);
+    const { error: signupError } = await signUp.email({ name, email, password });
 
     if (signupError) {
-      setError(signupError.message || 'Signup failed. Try again.')
-      setLoading(false)
-      return
+      setError(signupError.message || 'Signup failed. Try again.');
+      setLoading(false);
+      return;
     }
 
-    navigate('/')
+    // Force the auth client to re-fetch the session from the server
+    await authClient.getSession({ forceFetch: true });
+
+    // Full page reload so useSession() picks up the fresh session
+    window.location.href = '/';
   }
 
   return (
@@ -118,5 +121,5 @@ export function Signup() {
         </p>
       </form>
     </div>
-  )
+  );
 }

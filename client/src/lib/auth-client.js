@@ -1,16 +1,13 @@
 // client/src/lib/auth-client.js
-import { createAuthClient } from 'better-auth/react';
+import { createAuthClient } from "better-auth/react";
 
 export const authClient = createAuthClient({
-  baseURL: 'https://pulse-fitness-y1fa.onrender.com',
+  baseURL:
+    import.meta.env.VITE_API_URL?.replace("/api", "") ||
+    "http://localhost:4000",
   fetchOptions: {
-    credentials: 'include', // <-- THIS IS THE MISSING PIECE
+    credentials: "include",
   },
 });
 
-export const {
-  signIn,
-  signUp,
-  signOut,
-  useSession,
-} = authClient;
+export const { signIn, signUp, signOut, useSession } = authClient;

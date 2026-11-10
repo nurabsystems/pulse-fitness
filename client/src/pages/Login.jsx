@@ -1,38 +1,41 @@
 // client/src/pages/Login.jsx
-import { useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
-import { signIn } from "../lib/auth-client";
-import { PasswordInput } from "../components/PasswordInput";
+import { useState } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
+import { signIn, authClient } from '../lib/auth-client';
+import { PasswordInput } from '../components/PasswordInput';
 
 export function Login() {
   const [searchParams] = useSearchParams();
 
   // Get the redirect path and reason from the URL query params
-  const redirectUrl = searchParams.get("redirect") || "/";
-  const reason = searchParams.get("reason");
+  const redirectUrl = searchParams.get('redirect') || '/';
+  const reason = searchParams.get('reason');
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
   async function handleSubmit(e) {
     e.preventDefault();
-    setError("");
+    setError('');
     setLoading(true);
 
     const { error: signinError } = await signIn.email({ email, password });
 
     if (signinError) {
-      setError(signinError.message || "Login failed. Try again.");
+      setError(signinError.message || 'Login failed. Try again.');
       setLoading(false);
       return;
     }
 
-    const decodedTarget = decodeURIComponent(redirectUrl);
+    // Force the auth client to re-fetch the session from the server
+    await authClient.getSession({ forceFetch: true });
 
-    // The Nuclear Option: Full page reload to clear scroll memory
-    window.location.href = decodedTarget;
+    // Full page reload so useSession() picks up the fresh session
+    window.location.href = decodeURIComponent(redirectUrl);
   }
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-950 px-4 py-12">
       <form
@@ -40,12 +43,10 @@ export function Login() {
         className="w-full max-w-md rounded-2xl border border-zinc-800 bg-zinc-900 p-8"
       >
         <h1 className="text-2xl font-bold text-white">Sign In</h1>
-        <p className="mt-2 text-sm text-zinc-400">
-          Welcome back to Pulse Fitness.
-        </p>
+        <p className="mt-2 text-sm text-zinc-400">Welcome back to Pulse Fitness.</p>
 
         {/* Contextual Banner: Explains why they were redirected here */}
-        {reason === "auth" && (
+        {reason === 'auth' && (
           <div className="mt-4 rounded-lg bg-emerald-500/10 p-3 text-sm text-emerald-400 border border-emerald-500/20">
             Please sign in to complete your purchase.
           </div>
@@ -100,11 +101,11 @@ export function Login() {
           disabled={loading}
           className="mt-6 w-full rounded-full bg-emerald-400 px-6 py-3 font-semibold text-black transition hover:bg-emerald-500 disabled:opacity-50"
         >
-          {loading ? "Signing in..." : "Sign In"}
+          {loading ? 'Signing in...' : 'Sign In'}
         </button>
 
         <p className="mt-4 text-center text-sm text-zinc-400">
-          Don't have an account?{" "}
+          Don't have an account?{' '}
           <Link to="/signup" className="text-emerald-400 hover:underline">
             Sign up
           </Link>
