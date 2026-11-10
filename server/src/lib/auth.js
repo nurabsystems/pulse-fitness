@@ -1,9 +1,11 @@
-// src/lib/auth.js
+// server/src/lib/auth.js
 import "dotenv/config";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { db } from "../db/index.js";
 import * as schema from "../db/schema.js";
+
+const isProduction = process.env.NODE_ENV === "production";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -30,15 +32,14 @@ export const auth = betterAuth({
     },
   },
   advanced: {
-    useSecureCookies: false,
+    useSecureCookies: isProduction,
     defaultCookieAttributes: {
-      sameSite: "lax",
-      secure: false,
+      sameSite: isProduction ? "none" : "lax",
+      secure: isProduction,
       httpOnly: true,
       path: "/",
     },
   },
-
   user: {
     additionalFields: {
       role: {
