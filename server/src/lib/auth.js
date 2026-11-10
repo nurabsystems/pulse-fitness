@@ -1,5 +1,5 @@
 // src/lib/auth.js
-import 'dotenv/config';
+import "dotenv/config";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { db } from "../db/index.js";
@@ -30,14 +30,22 @@ export const auth = betterAuth({
     },
   },
   advanced: {
-    // This is the ONLY reliable way to disable __Secure- prefix in Better Auth 1.x
     useSecureCookies: false,
-    cookiePrefix: "",
     defaultCookieAttributes: {
-      sameSite: 'lax',
+      sameSite: "lax",
       secure: false,
       httpOnly: true,
-      path: '/',
+      path: "/",
+    },
+  },
+
+  user: {
+    additionalFields: {
+      role: {
+        type: "string",
+        input: false,
+        defaultValue: "member",
+      },
     },
   },
 });
