@@ -5,33 +5,33 @@ import { pgTable, text, uuid, integer, boolean, timestamp } from 'drizzle-orm/pg
 
 // --- TRAINERS ---
 export const trainers = pgTable('trainers', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  name: text('name').notNull(),
-  specialty: text('specialty').notNull(),  // 'HIIT' | 'Strength' | 'Yoga'
-  bio: text('bio').notNull(),
-  image: text('image').notNull(),
+  id: uuid('id').primaryKey().defaultRandom(), // unique identifier for each trainer
+  name: text('name').notNull(), // name of the trainer
+  specialty: text('specialty').notNull(),  // 'HIIT' | 'Strength' | 'Yoga' 
+  bio: text('bio').notNull(), // short biography of the trainer
+  image: text('image').notNull(), // URL to the trainer's image
   rating: integer('rating').notNull().default(5),  // base rating out of 5
-  createdAt: timestamp('created_at').defaultNow().notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(), // timestamp when the trainer was created
 });
 
 // --- CLASSES ---
 export const classes = pgTable('classes', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  day: text('day').notNull(),
-  time: text('time').notNull(),
-  name: text('name').notNull(),
+  id: uuid('id').primaryKey().defaultRandom(), // unique identifier for each class
+  day: text('day').notNull(), // day of the week (e.g., 'Monday', 'Tuesday', etc.)
+  time: text('time').notNull(), // time of the class
+  name: text('name').notNull(), // name of the class
   trainer: text('trainer').notNull(),  // name of trainer (denormalized for now)
-  createdAt: timestamp('created_at').defaultNow().notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(), // timestamp when the class was created
 });
 
 // --- PRICING ---
 export const pricing = pgTable('pricing', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  name: text('name').notNull(),
+  id: uuid('id').primaryKey().defaultRandom(), // unique identifier for each pricing option
+  name: text('name').notNull(), // name of the pricing option
   price: integer('price').notNull(),  // in euros
-  featured: boolean('featured').notNull().default(false),
+  featured: boolean('featured').notNull().default(false), // indicates if the pricing option is featured
   features: text('features').array().notNull(),  // array of strings
-  createdAt: timestamp('created_at').defaultNow().notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(), // timestamp when the pricing option was created
 });
 
 
@@ -42,37 +42,42 @@ export const pricing = pgTable('pricing', {
 // --- USERS ---
 
 export const user = pgTable('user', {
-  id: text('id').primaryKey(),
-  name: text('name').notNull(),
-  email: text('email').notNull().unique(),
-  emailVerified: boolean('email_verified').notNull().default(false),
+  id: text('id').primaryKey(), // ← This will hold the user's unique identifier (e.g., UUID or string)
+  name: text('name').notNull(), // ← This will hold the user's name
+  email: text('email').notNull().unique(), // ← This will hold the user's email address
+  emailVerified: boolean('email_verified').notNull().default(false), // ← This will indicate if the user's email is verified
   image: text('image'), // ← This will hold the avatar URL
   role: text('role').notNull().default('member'), // ← This will hold the user's role (e.g., 'member', 'admin')
   bio: text('bio'), // ← This will hold the user's biography or description
-  createdAt: timestamp('created_at').notNull().defaultNow(),
-  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+  banned: boolean('banned').notNull().default(false), // ← This will indicate if the user is banned
+  banReason: text('ban_reason'), // ← This will hold the reason for the ban, if applicable
+  createdAt: timestamp('created_at').notNull().defaultNow(), // ← This will hold the timestamp when the user was created
+  updatedAt: timestamp('updated_at').notNull().defaultNow(), // ← This will hold the timestamp when the user was last updated
 });
 
+
+// --- SESSIONS ---
 export const session = pgTable('session', {
   id: text('id').primaryKey(),
-  expiresAt: timestamp('expires_at').notNull(),
   token: text('token').notNull().unique(),
+  userId: text('user_id')
+    .notNull()
+    .references(() => user.id, { onDelete: 'cascade' }),
+  expiresAt: timestamp('expires_at').notNull(),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
   ipAddress: text('ip_address'),
   userAgent: text('user_agent'),
-  userId: text('user_id')
-    .notNull()
-    .references(() => user.id, { onDelete: 'cascade' }),
 });
 
+// --- ACCOUNTS ---
 export const account = pgTable('account', {
-  id: text('id').primaryKey(),
-  accountId: text('account_id').notNull(),
-  providerId: text('provider_id').notNull(),
+  id: text('id').primaryKey(), // ← This will hold the account's unique identifier
+  accountId: text('account_id').notNull(), // ← This will hold the account's unique identifier from the provider
+  providerId: text('provider_id').notNull(), // ← This will hold the provider's unique identifier
   userId: text('user_id')
     .notNull()
-    .references(() => user.id, { onDelete: 'cascade' }),
+    .references(() => user.id, { onDelete: 'cascade' }), // ← This will reference the user's unique identifier
   accessToken: text('access_token'),
   refreshToken: text('refresh_token'),
   idToken: text('id_token'),
@@ -84,8 +89,9 @@ export const account = pgTable('account', {
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 });
 
+// --- VERIFICATION TOKENS ---
 export const verification = pgTable('verification', {
-  id: text('id').primaryKey(),
+  id: text('id').primaryKey(), // ← This will hold the verification token's unique identifier
   identifier: text('identifier').notNull(),
   value: text('value').notNull(),
   expiresAt: timestamp('expires_at').notNull(),
@@ -107,6 +113,6 @@ export const orderItems = pgTable('order_items', {
   id: uuid('id').primaryKey().defaultRandom(),
   orderId: uuid('order_id').notNull().references(() => orders.id, { onDelete: 'cascade' }),
   pricingId: uuid('pricing_id').notNull(),
-  name: text('name').notNull(),
+  name: text('name').notNull(), // name of the pricing option
   price: integer('price').notNull(), // in cents
 });
