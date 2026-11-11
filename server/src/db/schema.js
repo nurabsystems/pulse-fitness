@@ -42,21 +42,23 @@ export const pricing = pgTable('pricing', {
 // --- USERS ---
 
 export const user = pgTable('user', {
-  id: text('id').primaryKey(), // ← This will hold the user's unique identifier (e.g., UUID or string)
-  name: text('name').notNull(), // ← This will hold the user's name
-  email: text('email').notNull().unique(), // ← This will hold the user's email address
-  emailVerified: boolean('email_verified').notNull().default(false), // ← This will indicate if the user's email is verified
-  image: text('image'), // ← This will hold the avatar URL
-  role: text('role').notNull().default('member'), // ← This will hold the user's role (e.g., 'member', 'admin')
-  bio: text('bio'), // ← This will hold the user's biography or description
-  banned: boolean('banned').notNull().default(false), // ← This will indicate if the user is banned
-  banReason: text('ban_reason'), // ← This will hold the reason for the ban, if applicable
-  createdAt: timestamp('created_at').notNull().defaultNow(), // ← This will hold the timestamp when the user was created
-  updatedAt: timestamp('updated_at').notNull().defaultNow(), // ← This will hold the timestamp when the user was last updated
+  id: text('id').primaryKey(),
+  name: text('name').notNull(),
+  email: text('email').notNull().unique(),
+  emailVerified: boolean('email_verified').notNull().default(false),
+  image: text('image'),
+  role: text('role').notNull().default('member'),
+  bio: text('bio'),
+  banned: boolean('banned').notNull().default(false),
+  banReason: text('ban_reason'),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
 });
 
 
 // --- SESSIONS ---
+
+
 export const session = pgTable('session', {
   id: text('id').primaryKey(),
   token: text('token').notNull().unique(),

@@ -52,24 +52,26 @@ export const adminController = {
   },
 
   // GET /api/admin/users — list all users
-  async getAllUsers(req, res) {
-    try {
-      const users = await db
-        .select({
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          role: user.role,
-          image: user.image,
-          createdAt: user.createdAt,
-        })
-        .from(user)
-        .orderBy(user.createdAt);
+ async getAllUsers(req, res) {
+  try {
+    const users = await db
+      .select({
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        image: user.image,
+        banned: user.banned,
+        banReason: user.banReason,
+        createdAt: user.createdAt,
+      })
+      .from(user)
+      .orderBy(user.createdAt);
 
-      res.json({ users });
-    } catch (error) {
-      console.error('Admin users error:', error);
-      res.status(500).json({ error: 'Failed to fetch users' });
-    }
-  },
+    res.json({ users });
+  } catch (error) {
+    console.error('Admin users error:', error);
+    res.status(500).json({ error: 'Failed to fetch users' });
+  }
+}
 };
