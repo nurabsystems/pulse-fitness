@@ -13,3 +13,6 @@ adminRouter.get('/users', adminController.getAllUsers);
 adminRouter.put('/users/:id/role', adminController.updateUserRole);
 adminRouter.put('/users/:id/ban', adminController.toggleUserBan);
 adminRouter.delete('/users/:id', adminController.deleteUser);
+adminRouter.post('/trainers', adminController.createTrainer);
+adminRouter.put('/trainers/:id', adminController.updateTrainer);
+adminRouter.delete('/trainers/:id', adminController.deleteTrainer);

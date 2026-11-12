@@ -1,7 +1,8 @@
 // server/src/controllers/adminController.js
 import { db } from "../db/index.js";
-import { user, orders } from "../db/schema.js";
+import { user, orders, trainers } from "../db/schema.js";
 import { eq, sql, count } from "drizzle-orm";
+
 
 export const adminController = {
   // GET /api/admin/stats — dashboard overview stats
@@ -178,6 +179,98 @@ export const adminController = {
     } catch (error) {
       console.error("Delete user error:", error);
       res.status(500).json({ error: "Failed to delete user" });
+    }
+  },
+
+//TRAINERS CRUD
+
+    // POST /api/admin/trainers — create a new trainer
+  async createTrainer(req, res) {
+    try {
+      const { name, specialty, bio, image, rating } = req.body;
+
+      if (!name || !specialty || !bio || !image) {
+        return res.status(400).json({ error: 'name, specialty, bio, and image are required' });
+      }
+
+      if (!['HIIT', 'Strength', 'Yoga'].includes(specialty)) {
+        return res.status(400).json({ error: 'specialty must be HIIT, Strength, or Yoga' });
+      }
+
+      const [trainer] = await db
+        .insert(trainers)
+        .values({
+          name: name.trim(),
+          specialty,
+          bio: bio.trim(),
+          image: image.trim(),
+          rating: rating || 5,
+        })
+        .returning();
+
+      res.status(201).json({ trainer });
+    } catch (error) {
+      console.error('Create trainer error:', error);
+      res.status(500).json({ error: 'Failed to create trainer' });
+    }
+  },
+
+  // PUT /api/admin/trainers/:id — update a trainer
+  async updateTrainer(req, res) {
+    try {
+      const { id } = req.params;
+      const { name, specialty, bio, image, rating } = req.body;
+
+      if (specialty && !['HIIT', 'Strength', 'Yoga'].includes(specialty)) {
+        return res.status(400).json({ error: 'specialty must be HIIT, Strength, or Yoga' });
+      }
+
+      const updates = {};
+      if (name) updates.name = name.trim();
+      if (specialty) updates.specialty = specialty;
+      if (bio) updates.bio = bio.trim();
+      if (image) updates.image = image.trim();
+      if (rating !== undefined) updates.rating = rating;
+
+      if (Object.keys(updates).length === 0) {
+        return res.status(400).json({ error: 'No fields to update' });
+      }
+
+      const [trainer] = await db
+        .update(trainers)
+        .set(updates)
+        .where(eq(trainers.id, id))
+        .returning();
+
+      if (!trainer) {
+        return res.status(404).json({ error: 'Trainer not found' });
+      }
+
+      res.json({ trainer });
+    } catch (error) {
+      console.error('Update trainer error:', error);
+      res.status(500).json({ error: 'Failed to update trainer' });
+    }
+  },
+
+  // DELETE /api/admin/trainers/:id — delete a trainer
+  async deleteTrainer(req, res) {
+    try {
+      const { id } = req.params;
+
+      const [deleted] = await db
+        .delete(trainers)
+        .where(eq(trainers.id, id))
+        .returning();
+
+      if (!deleted) {
+        return res.status(404).json({ error: 'Trainer not found' });
+      }
+
+      res.json({ success: true, deleted: deleted.name });
+    } catch (error) {
+      console.error('Delete trainer error:', error);
+      res.status(500).json({ error: 'Failed to delete trainer' });
     }
   },
 };
