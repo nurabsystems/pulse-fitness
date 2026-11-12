@@ -19,6 +19,15 @@ export function AdminDashboard() {
   const [actionLoading, setActionLoading] = useState(null);
   const [actionMessage, setActionMessage] = useState("");
 
+  // Auto-dismiss action message after 20 seconds
+  useEffect(() => {
+    if (!actionMessage) return;
+    const timer = setTimeout(() => {
+      setActionMessage("");
+    }, 20000);
+    return () => clearTimeout(timer);
+  }, [actionMessage]);
+
   // Redirect non-admin users
   useEffect(() => {
     if (!isPending && !session?.user) {
@@ -253,11 +262,23 @@ export function AdminDashboard() {
                 </h3>
 
                 {actionMessage && (
-                  <div className="mt-3 rounded-lg bg-zinc-800 p-2 text-sm text-zinc-300">
-                    {actionMessage}
+                  <div
+                    className={`mt-3 flex items-center justify-between rounded-lg p-2 text-sm ${
+                      actionMessage.startsWith("✅")
+                        ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+                        : "bg-red-500/10 text-red-400 border border-red-500/20"
+                    }`}
+                  >
+                    <span>{actionMessage}</span>
+                    <button
+                      onClick={() => setActionMessage("")}
+                      className="ml-2 opacity-60 hover:opacity-100"
+                      aria-label="Dismiss message"
+                    >
+                      ✕
+                    </button>
                   </div>
                 )}
-
                 <div className="mt-4 overflow-x-auto">
                   <table className="w-full text-sm">
                     <thead>
