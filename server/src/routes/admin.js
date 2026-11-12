@@ -1,4 +1,3 @@
-// server/src/routes/admin.js
 import express from 'express';
 import { adminController } from '../controllers/adminController.js';
 import { requireAuth } from '../middleware/auth.js';
@@ -11,3 +10,6 @@ adminRouter.use(requireAuth, requireAdmin);
 
 adminRouter.get('/stats', adminController.getStats);
 adminRouter.get('/users', adminController.getAllUsers);
+adminRouter.put('/users/:id/role', adminController.updateUserRole);
+adminRouter.put('/users/:id/ban', adminController.toggleUserBan);
+adminRouter.delete('/users/:id', adminController.deleteUser);
