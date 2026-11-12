@@ -31,3 +31,6 @@ Thumbs.db
 
 # Drizzle (database migrations — will be added later)
 server/drizzle/
+
+# Test cookie files — never commit session tokens
+cookies*.txt
