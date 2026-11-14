@@ -1,6 +1,6 @@
 // server/src/controllers/adminController.js
 import { db } from "../db/index.js";
-import { user, orders, trainers, classes } from "../db/schema.js";
+import { user, orders, trainers, classes, orderItems  } from "../db/schema.js";
 import { eq, sql, count } from "drizzle-orm";
 
 export const adminController = {
@@ -386,6 +386,78 @@ export const adminController = {
     } catch (error) {
       console.error("Delete class error:", error);
       res.status(500).json({ error: "Failed to delete class" });
+    }
+  },
+
+    // GET /api/admin/orders — list all orders with user info
+  async getAllOrders(req, res) {
+    try {
+      const result = await db
+        .select({
+          id: orders.id,
+          status: orders.status,
+          total: orders.total,
+          createdAt: orders.createdAt,
+          userId: orders.userId,
+          userName: user.name,
+          userEmail: user.email,
+        })
+        .from(orders)
+        .leftJoin(user, eq(orders.userId, user.id))
+        .orderBy(orders.createdAt);
+
+      // Convert cents → euros
+      const formatted = result.map((o) => ({
+        ...o,
+        total: o.total / 100,
+      }));
+
+      res.json({ orders: formatted });
+    } catch (error) {
+      console.error('Admin orders error:', error);
+      res.status(500).json({ error: 'Failed to fetch orders' });
+    }
+  },
+
+  // GET /api/admin/orders/:id — single order with line items
+  async getOrderById(req, res) {
+    try {
+      const { id } = req.params;
+
+      const [order] = await db
+        .select({
+          id: orders.id,
+          status: orders.status,
+          total: orders.total,
+          createdAt: orders.createdAt,
+          userId: orders.userId,
+          userName: user.name,
+          userEmail: user.email,
+        })
+        .from(orders)
+        .leftJoin(user, eq(orders.userId, user.id))
+        .where(eq(orders.id, id))
+        .limit(1);
+
+      if (!order) {
+        return res.status(404).json({ error: 'Order not found' });
+      }
+
+      const items = await db
+        .select()
+        .from(orderItems)
+        .where(eq(orderItems.orderId, id));
+
+      res.json({
+        order: {
+          ...order,
+          total: order.total / 100,
+          items: items.map((i) => ({ ...i, price: i.price / 100 })),
+        },
+      });
+    } catch (error) {
+      console.error('Admin order detail error:', error);
+      res.status(500).json({ error: 'Failed to fetch order' });
     }
   },
 };
