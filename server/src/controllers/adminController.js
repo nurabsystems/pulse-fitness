@@ -3,7 +3,6 @@ import { db } from "../db/index.js";
 import { user, orders, trainers, classes } from "../db/schema.js";
 import { eq, sql, count } from "drizzle-orm";
 
-
 export const adminController = {
   // GET /api/admin/stats — dashboard overview stats
   async getStats(req, res) {
@@ -182,19 +181,23 @@ export const adminController = {
     }
   },
 
-//TRAINERS CRUD
+  //TRAINERS CRUD
 
-    // POST /api/admin/trainers — create a new trainer
+  // POST /api/admin/trainers — create a new trainer
   async createTrainer(req, res) {
     try {
       const { name, specialty, bio, image, rating } = req.body;
 
       if (!name || !specialty || !bio || !image) {
-        return res.status(400).json({ error: 'name, specialty, bio, and image are required' });
+        return res
+          .status(400)
+          .json({ error: "name, specialty, bio, and image are required" });
       }
 
-      if (!['HIIT', 'Strength', 'Yoga'].includes(specialty)) {
-        return res.status(400).json({ error: 'specialty must be HIIT, Strength, or Yoga' });
+      if (!["HIIT", "Strength", "Yoga"].includes(specialty)) {
+        return res
+          .status(400)
+          .json({ error: "specialty must be HIIT, Strength, or Yoga" });
       }
 
       const [trainer] = await db
@@ -210,8 +213,8 @@ export const adminController = {
 
       res.status(201).json({ trainer });
     } catch (error) {
-      console.error('Create trainer error:', error);
-      res.status(500).json({ error: 'Failed to create trainer' });
+      console.error("Create trainer error:", error);
+      res.status(500).json({ error: "Failed to create trainer" });
     }
   },
 
@@ -221,8 +224,10 @@ export const adminController = {
       const { id } = req.params;
       const { name, specialty, bio, image, rating } = req.body;
 
-      if (specialty && !['HIIT', 'Strength', 'Yoga'].includes(specialty)) {
-        return res.status(400).json({ error: 'specialty must be HIIT, Strength, or Yoga' });
+      if (specialty && !["HIIT", "Strength", "Yoga"].includes(specialty)) {
+        return res
+          .status(400)
+          .json({ error: "specialty must be HIIT, Strength, or Yoga" });
       }
 
       const updates = {};
@@ -233,7 +238,7 @@ export const adminController = {
       if (rating !== undefined) updates.rating = rating;
 
       if (Object.keys(updates).length === 0) {
-        return res.status(400).json({ error: 'No fields to update' });
+        return res.status(400).json({ error: "No fields to update" });
       }
 
       const [trainer] = await db
@@ -243,13 +248,13 @@ export const adminController = {
         .returning();
 
       if (!trainer) {
-        return res.status(404).json({ error: 'Trainer not found' });
+        return res.status(404).json({ error: "Trainer not found" });
       }
 
       res.json({ trainer });
     } catch (error) {
-      console.error('Update trainer error:', error);
-      res.status(500).json({ error: 'Failed to update trainer' });
+      console.error("Update trainer error:", error);
+      res.status(500).json({ error: "Failed to update trainer" });
     }
   },
 
@@ -264,17 +269,17 @@ export const adminController = {
         .returning();
 
       if (!deleted) {
-        return res.status(404).json({ error: 'Trainer not found' });
+        return res.status(404).json({ error: "Trainer not found" });
       }
 
       res.json({ success: true, deleted: deleted.name });
     } catch (error) {
-      console.error('Delete trainer error:', error);
-      res.status(500).json({ error: 'Failed to delete trainer' });
+      console.error("Delete trainer error:", error);
+      res.status(500).json({ error: "Failed to delete trainer" });
     }
   },
 
-//CLASSES CRUD
+  //CLASSES CRUD
 
   // POST /api/admin/classes — create a new class
   async createClass(req, res) {
@@ -282,12 +287,22 @@ export const adminController = {
       const { day, time, name, trainer } = req.body;
 
       if (!day || !time || !name || !trainer) {
-        return res.status(400).json({ error: 'day, time, name, and trainer are required' });
+        return res
+          .status(400)
+          .json({ error: "day, time, name, and trainer are required" });
       }
 
-      const validDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+      const validDays = [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday",
+      ];
       if (!validDays.includes(day)) {
-        return res.status(400).json({ error: 'Invalid day' });
+        return res.status(400).json({ error: "Invalid day" });
       }
 
       const [newClass] = await db
@@ -302,8 +317,8 @@ export const adminController = {
 
       res.status(201).json({ class: newClass });
     } catch (error) {
-      console.error('Create class error:', error);
-      res.status(500).json({ error: 'Failed to create class' });
+      console.error("Create class error:", error);
+      res.status(500).json({ error: "Failed to create class" });
     }
   },
 
@@ -313,9 +328,17 @@ export const adminController = {
       const { id } = req.params;
       const { day, time, name, trainer } = req.body;
 
-      const validDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+      const validDays = [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday",
+      ];
       if (day && !validDays.includes(day)) {
-        return res.status(400).json({ error: 'Invalid day' });
+        return res.status(400).json({ error: "Invalid day" });
       }
 
       const updates = {};
@@ -325,7 +348,7 @@ export const adminController = {
       if (trainer) updates.trainer = trainer.trim();
 
       if (Object.keys(updates).length === 0) {
-        return res.status(400).json({ error: 'No fields to update' });
+        return res.status(400).json({ error: "No fields to update" });
       }
 
       const [updated] = await db
@@ -335,13 +358,13 @@ export const adminController = {
         .returning();
 
       if (!updated) {
-        return res.status(404).json({ error: 'Class not found' });
+        return res.status(404).json({ error: "Class not found" });
       }
 
       res.json({ class: updated });
     } catch (error) {
-      console.error('Update class error:', error);
-      res.status(500).json({ error: 'Failed to update class' });
+      console.error("Update class error:", error);
+      res.status(500).json({ error: "Failed to update class" });
     }
   },
 
@@ -356,14 +379,13 @@ export const adminController = {
         .returning();
 
       if (!deleted) {
-        return res.status(404).json({ error: 'Class not found' });
+        return res.status(404).json({ error: "Class not found" });
       }
 
       res.json({ success: true, deleted: deleted.name });
     } catch (error) {
-      console.error('Delete class error:', error);
-      res.status(500).json({ error: 'Failed to delete class' });
+      console.error("Delete class error:", error);
+      res.status(500).json({ error: "Failed to delete class" });
     }
   },
-
 };
