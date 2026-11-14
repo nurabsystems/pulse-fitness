@@ -517,7 +517,7 @@ export function AdminDashboard() {
                         <img
                           src={t.image}
                           alt={t.name}
-                          className="h-48 w-full object-cover"
+                          className="h-48 w-full object-cover object-top"
                         />
                         <div className="p-4">
                           <h4 className="font-bold text-white">{t.name}</h4>
