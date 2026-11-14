@@ -1,6 +1,6 @@
 // server/src/controllers/adminController.js
 import { db } from "../db/index.js";
-import { user, orders, trainers } from "../db/schema.js";
+import { user, orders, trainers, classes } from "../db/schema.js";
 import { eq, sql, count } from "drizzle-orm";
 
 
@@ -273,4 +273,97 @@ export const adminController = {
       res.status(500).json({ error: 'Failed to delete trainer' });
     }
   },
+
+//CLASSES CRUD
+
+  // POST /api/admin/classes — create a new class
+  async createClass(req, res) {
+    try {
+      const { day, time, name, trainer } = req.body;
+
+      if (!day || !time || !name || !trainer) {
+        return res.status(400).json({ error: 'day, time, name, and trainer are required' });
+      }
+
+      const validDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+      if (!validDays.includes(day)) {
+        return res.status(400).json({ error: 'Invalid day' });
+      }
+
+      const [newClass] = await db
+        .insert(classes)
+        .values({
+          day,
+          time: time.trim(),
+          name: name.trim(),
+          trainer: trainer.trim(),
+        })
+        .returning();
+
+      res.status(201).json({ class: newClass });
+    } catch (error) {
+      console.error('Create class error:', error);
+      res.status(500).json({ error: 'Failed to create class' });
+    }
+  },
+
+  // PUT /api/admin/classes/:id — update a class
+  async updateClass(req, res) {
+    try {
+      const { id } = req.params;
+      const { day, time, name, trainer } = req.body;
+
+      const validDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+      if (day && !validDays.includes(day)) {
+        return res.status(400).json({ error: 'Invalid day' });
+      }
+
+      const updates = {};
+      if (day) updates.day = day;
+      if (time) updates.time = time.trim();
+      if (name) updates.name = name.trim();
+      if (trainer) updates.trainer = trainer.trim();
+
+      if (Object.keys(updates).length === 0) {
+        return res.status(400).json({ error: 'No fields to update' });
+      }
+
+      const [updated] = await db
+        .update(classes)
+        .set(updates)
+        .where(eq(classes.id, id))
+        .returning();
+
+      if (!updated) {
+        return res.status(404).json({ error: 'Class not found' });
+      }
+
+      res.json({ class: updated });
+    } catch (error) {
+      console.error('Update class error:', error);
+      res.status(500).json({ error: 'Failed to update class' });
+    }
+  },
+
+  // DELETE /api/admin/classes/:id — delete a class
+  async deleteClass(req, res) {
+    try {
+      const { id } = req.params;
+
+      const [deleted] = await db
+        .delete(classes)
+        .where(eq(classes.id, id))
+        .returning();
+
+      if (!deleted) {
+        return res.status(404).json({ error: 'Class not found' });
+      }
+
+      res.json({ success: true, deleted: deleted.name });
+    } catch (error) {
+      console.error('Delete class error:', error);
+      res.status(500).json({ error: 'Failed to delete class' });
+    }
+  },
+
 };
