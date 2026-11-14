@@ -19,3 +19,5 @@ adminRouter.delete("/trainers/:id", adminController.deleteTrainer);
 adminRouter.post("/classes", adminController.createClass);
 adminRouter.put("/classes/:id", adminController.updateClass);
 adminRouter.delete("/classes/:id", adminController.deleteClass);
+adminRouter.get('/orders', adminController.getAllOrders);
+adminRouter.get('/orders/:id', adminController.getOrderById);
