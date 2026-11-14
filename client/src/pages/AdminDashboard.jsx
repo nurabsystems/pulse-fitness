@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useSession } from "../lib/auth-client";
 import { TrainerFormModal } from "../components/TrainerFormModal";
+import { ClassFormModal } from "../components/ClassFormModal";
 
 const API_URL =
   import.meta.env.VITE_API_URL || "https://pulse-fitness-y1fa.onrender.com/api";
@@ -23,6 +24,10 @@ export function AdminDashboard() {
   const [trainersLoading, setTrainersLoading] = useState(true);
   const [showTrainerModal, setShowTrainerModal] = useState(false);
   const [editingTrainer, setEditingTrainer] = useState(null);
+  const [classesList, setClassesList] = useState([]);
+  const [classesLoading, setClassesLoading] = useState(true);
+  const [showClassModal, setShowClassModal] = useState(false);
+  const [editingClass, setEditingClass] = useState(null);
 
   // Auto-dismiss action message after 20 seconds
   useEffect(() => {
@@ -71,6 +76,8 @@ export function AdminDashboard() {
     if (session?.user) loadData();
   }, [session]);
 
+  // Fetch trainers
+
   useEffect(() => {
     async function loadTrainers() {
       try {
@@ -88,6 +95,25 @@ export function AdminDashboard() {
     }
 
     if (session?.user) loadTrainers();
+  }, [session]);
+
+  // Fetch classes
+  useEffect(() => {
+    async function loadClasses() {
+      try {
+        setClassesLoading(true);
+        const res = await fetch(`${API_URL}/classes`, {
+          credentials: "include",
+        });
+        const data = await res.json();
+        setClassesList(data.classes || []);
+      } catch (err) {
+        console.error("Failed to load classes:", err);
+      } finally {
+        setClassesLoading(false);
+      }
+    }
+    if (session?.user) loadClasses();
   }, [session]);
 
   if (loading) {
@@ -259,6 +285,70 @@ export function AdminDashboard() {
   function handleAddTrainer() {
     setEditingTrainer(null);
     setShowTrainerModal(true);
+  }
+
+  async function handleSaveClass(formData) {
+    const url = editingClass
+      ? `${API_URL}/admin/classes/${editingClass.id}`
+      : `${API_URL}/admin/classes`;
+
+    const method = editingClass ? "PUT" : "POST";
+
+    const res = await fetch(url, {
+      method,
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify(formData),
+    });
+
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.error || "Failed to save class");
+    }
+
+    const data = await res.json();
+
+    if (editingClass) {
+      setClassesList((prev) =>
+        prev.map((c) => (c.id === data.class.id ? data.class : c)),
+      );
+      setActionMessage("✅ Class updated");
+    } else {
+      setClassesList((prev) => [...prev, data.class]);
+      setActionMessage("✅ Class created");
+    }
+
+    setShowClassModal(false);
+    setEditingClass(null);
+  }
+
+  async function handleDeleteClass(id, name) {
+    if (!confirm(`Delete class "${name}"? This cannot be undone.`)) return;
+    try {
+      const res = await fetch(`${API_URL}/admin/classes/${id}`, {
+        method: "DELETE",
+        credentials: "include",
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        setActionMessage(`❌ ${err.error}`);
+        return;
+      }
+      setClassesList((prev) => prev.filter((c) => c.id !== id));
+      setActionMessage(`✅ Deleted ${name}`);
+    } catch {
+      setActionMessage("❌ Failed to delete class");
+    }
+  }
+
+  function handleEditClass(c) {
+    setEditingClass(c);
+    setShowClassModal(true);
+  }
+
+  function handleAddClass() {
+    setEditingClass(null);
+    setShowClassModal(true);
   }
 
   return (
@@ -552,9 +642,98 @@ export function AdminDashboard() {
               </div>
             )}
 
-            {(activeTab === "classes" || activeTab === "orders") && (
+            {activeTab === "classes" && (
+              <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-lg font-bold">
+                    All Classes ({classesList.length})
+                  </h3>
+                  <button
+                    onClick={handleAddClass}
+                    className="rounded-full bg-emerald-400 px-4 py-2 text-sm font-semibold text-black hover:bg-emerald-500"
+                  >
+                    + Add Class
+                  </button>
+                </div>
+
+                {actionMessage && (
+                  <div
+                    className={`mt-3 flex items-center justify-between rounded-lg p-2 text-sm ${
+                      actionMessage.startsWith("✅")
+                        ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+                        : "bg-red-500/10 text-red-400 border border-red-500/20"
+                    }`}
+                  >
+                    <span>{actionMessage}</span>
+                    <button
+                      onClick={() => setActionMessage("")}
+                      className="ml-2 opacity-60 hover:opacity-100"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                )}
+
+                {classesLoading ? (
+                  <p className="mt-6 text-center text-zinc-500">
+                    Loading classes...
+                  </p>
+                ) : (
+                  <div className="mt-6 overflow-x-auto">
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr className="text-left text-xs uppercase tracking-wider text-zinc-400 border-b border-zinc-800">
+                          <th className="pb-2">Day</th>
+                          <th className="pb-2">Time</th>
+                          <th className="pb-2">Class</th>
+                          <th className="pb-2">Trainer</th>
+                          <th className="pb-2">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {classesList.map((c) => (
+                          <tr
+                            key={c.id}
+                            className="border-b border-zinc-800 last:border-0"
+                          >
+                            <td className="py-3 text-emerald-400 font-semibold">
+                              {c.day}
+                            </td>
+                            <td className="py-3 text-zinc-400">{c.time}</td>
+                            <td className="py-3 font-semibold text-white">
+                              {c.name}
+                            </td>
+                            <td className="py-3 text-zinc-400">{c.trainer}</td>
+                            <td className="py-3">
+                              <div className="flex gap-1 text-xs">
+                                <button
+                                  onClick={() => handleEditClass(c)}
+                                  className="rounded bg-amber-400/10 px-2 py-1 text-amber-400 hover:bg-amber-400/20"
+                                >
+                                  ✎ Edit
+                                </button>
+                                <button
+                                  onClick={() =>
+                                    handleDeleteClass(c.id, c.name)
+                                  }
+                                  className="rounded bg-red-500/10 px-2 py-1 text-red-400 hover:bg-red-500/20"
+                                >
+                                  🗑 Delete
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {activeTab === "orders" && (
               <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6 text-center">
-                <p className="text-zinc-400">Coming in Sprint 2.5.4 / 2.5.5.</p>
+                <p className="text-zinc-400">Coming in Sprint 2.5.5.</p>
               </div>
             )}
           </div>
@@ -568,6 +747,17 @@ export function AdminDashboard() {
               setEditingTrainer(null);
             }}
             onSave={handleSaveTrainer}
+          />
+        )}
+
+        {showClassModal && (
+          <ClassFormModal
+            classData={editingClass}
+            onClose={() => {
+              setShowClassModal(false);
+              setEditingClass(null);
+            }}
+            onSave={handleSaveClass}
           />
         )}
       </div>
