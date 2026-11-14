@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useSession } from "../lib/auth-client";
+import { TrainerFormModal } from "../components/TrainerFormModal";
 
 const API_URL =
   import.meta.env.VITE_API_URL || "https://pulse-fitness-y1fa.onrender.com/api";
@@ -18,6 +19,10 @@ export function AdminDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
   const [actionLoading, setActionLoading] = useState(null);
   const [actionMessage, setActionMessage] = useState("");
+  const [trainers, setTrainers] = useState([]);
+  const [trainersLoading, setTrainersLoading] = useState(true);
+  const [showTrainerModal, setShowTrainerModal] = useState(false);
+  const [editingTrainer, setEditingTrainer] = useState(null);
 
   // Auto-dismiss action message after 20 seconds
   useEffect(() => {
@@ -64,6 +69,25 @@ export function AdminDashboard() {
     }
 
     if (session?.user) loadData();
+  }, [session]);
+
+  useEffect(() => {
+    async function loadTrainers() {
+      try {
+        setTrainersLoading(true);
+        const res = await fetch(`${API_URL}/trainers`, {
+          credentials: "include",
+        });
+        const data = await res.json();
+        setTrainers(data.trainers || []);
+      } catch (err) {
+        console.error("Failed to load trainers:", err);
+      } finally {
+        setTrainersLoading(false);
+      }
+    }
+
+    if (session?.user) loadTrainers();
   }, [session]);
 
   if (loading) {
@@ -171,6 +195,70 @@ export function AdminDashboard() {
     } finally {
       setActionLoading(null);
     }
+  }
+
+  async function handleSaveTrainer(formData) {
+    const url = editingTrainer
+      ? `${API_URL}/admin/trainers/${editingTrainer.id}`
+      : `${API_URL}/admin/trainers`;
+
+    const method = editingTrainer ? "PUT" : "POST";
+
+    const res = await fetch(url, {
+      method,
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify(formData),
+    });
+
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.error || "Failed to save trainer");
+    }
+
+    const data = await res.json();
+
+    if (editingTrainer) {
+      setTrainers((prev) =>
+        prev.map((t) => (t.id === data.trainer.id ? data.trainer : t)),
+      );
+      setActionMessage("✅ Trainer updated");
+    } else {
+      setTrainers((prev) => [...prev, data.trainer]);
+      setActionMessage("✅ Trainer created");
+    }
+
+    setShowTrainerModal(false);
+    setEditingTrainer(null);
+  }
+
+  async function handleDeleteTrainer(id, name) {
+    if (!confirm(`Delete trainer "${name}"? This cannot be undone.`)) return;
+    try {
+      const res = await fetch(`${API_URL}/admin/trainers/${id}`, {
+        method: "DELETE",
+        credentials: "include",
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        setActionMessage(`❌ ${err.error}`);
+        return;
+      }
+      setTrainers((prev) => prev.filter((t) => t.id !== id));
+      setActionMessage(`✅ Deleted ${name}`);
+    } catch {
+      setActionMessage("❌ Failed to delete trainer");
+    }
+  }
+
+  function handleEditTrainer(trainer) {
+    setEditingTrainer(trainer);
+    setShowTrainerModal(true);
+  }
+
+  function handleAddTrainer() {
+    setEditingTrainer(null);
+    setShowTrainerModal(true);
   }
 
   return (
@@ -383,17 +471,105 @@ export function AdminDashboard() {
               </div>
             )}
 
-            {(activeTab === "trainers" ||
-              activeTab === "classes" ||
-              activeTab === "orders") && (
+            {activeTab === "trainers" && (
+              <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-lg font-bold">
+                    All Trainers ({trainers.length})
+                  </h3>
+                  <button
+                    onClick={handleAddTrainer}
+                    className="rounded-full bg-emerald-400 px-4 py-2 text-sm font-semibold text-black hover:bg-emerald-500"
+                  >
+                    + Add Trainer
+                  </button>
+                </div>
+
+                {actionMessage && (
+                  <div
+                    className={`mt-3 flex items-center justify-between rounded-lg p-2 text-sm ${
+                      actionMessage.startsWith("✅")
+                        ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+                        : "bg-red-500/10 text-red-400 border border-red-500/20"
+                    }`}
+                  >
+                    <span>{actionMessage}</span>
+                    <button
+                      onClick={() => setActionMessage("")}
+                      className="ml-2 opacity-60 hover:opacity-100"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                )}
+
+                {trainersLoading ? (
+                  <p className="mt-6 text-center text-zinc-500">
+                    Loading trainers...
+                  </p>
+                ) : (
+                  <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+                    {trainers.map((t) => (
+                      <div
+                        key={t.id}
+                        className="rounded-xl border border-zinc-800 bg-zinc-950 overflow-hidden"
+                      >
+                        <img
+                          src={t.image}
+                          alt={t.name}
+                          className="h-48 w-full object-cover"
+                        />
+                        <div className="p-4">
+                          <h4 className="font-bold text-white">{t.name}</h4>
+                          <p className="text-xs font-semibold uppercase tracking-wide text-emerald-400">
+                            {t.specialty}
+                          </p>
+                          <p className="mt-2 text-xs text-zinc-400 line-clamp-3">
+                            {t.bio}
+                          </p>
+                          <div className="mt-3 flex items-center gap-1 text-amber-400 text-xs">
+                            ⭐ {t.rating}
+                          </div>
+                          <div className="mt-3 flex gap-2">
+                            <button
+                              onClick={() => handleEditTrainer(t)}
+                              className="flex-1 rounded bg-amber-400/10 px-2 py-1.5 text-xs font-semibold text-amber-400 hover:bg-amber-400/20"
+                            >
+                              ✎ Edit
+                            </button>
+                            <button
+                              onClick={() => handleDeleteTrainer(t.id, t.name)}
+                              className="flex-1 rounded bg-red-500/10 px-2 py-1.5 text-xs font-semibold text-red-400 hover:bg-red-500/20"
+                            >
+                              🗑 Delete
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {(activeTab === "classes" || activeTab === "orders") && (
               <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6 text-center">
-                <p className="text-zinc-400">
-                  Coming in Sprint 2.5.3 / 2.5.4 / 2.5.5.
-                </p>
+                <p className="text-zinc-400">Coming in Sprint 2.5.4 / 2.5.5.</p>
               </div>
             )}
           </div>
         </div>
+
+        {showTrainerModal && (
+          <TrainerFormModal
+            trainer={editingTrainer}
+            onClose={() => {
+              setShowTrainerModal(false);
+              setEditingTrainer(null);
+            }}
+            onSave={handleSaveTrainer}
+          />
+        )}
       </div>
     </section>
   );
