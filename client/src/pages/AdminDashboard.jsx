@@ -28,6 +28,10 @@ export function AdminDashboard() {
   const [classesLoading, setClassesLoading] = useState(true);
   const [showClassModal, setShowClassModal] = useState(false);
   const [editingClass, setEditingClass] = useState(null);
+  const [ordersList, setOrdersList] = useState([]);
+  const [ordersLoading, setOrdersLoading] = useState(true);
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [orderDetailLoading, setOrderDetailLoading] = useState(false);
 
   // Auto-dismiss action message after 20 seconds
   useEffect(() => {
@@ -115,6 +119,26 @@ export function AdminDashboard() {
     }
     if (session?.user) loadClasses();
   }, [session]);
+
+// Fetch orders
+useEffect(() => {
+  async function loadOrders() {
+    try {
+      setOrdersLoading(true);
+      const res = await fetch(`${API_URL}/admin/orders`, {
+        credentials: 'include',
+      });
+      const data = await res.json();
+      setOrdersList(data.orders || []);
+    } catch (err) {
+      console.error('Failed to load orders:', err);
+    } finally {
+      setOrdersLoading(false);
+    }
+  }
+  if (session?.user) loadOrders();
+}, [session]);
+
 
   if (loading) {
     return (
@@ -350,6 +374,23 @@ export function AdminDashboard() {
     setEditingClass(null);
     setShowClassModal(true);
   }
+
+
+async function openOrderDetail(orderId) {
+  setOrderDetailLoading(true);
+  try {
+    const res = await fetch(`${API_URL}/admin/orders/${orderId}`, {
+      credentials: 'include',
+    });
+    const data = await res.json();
+    setSelectedOrder(data.order);
+  } catch {
+    setActionMessage('❌ Failed to load order detail');
+  } finally {
+    setOrderDetailLoading(false);
+  }
+}
+
 
   return (
     <section className="min-h-screen bg-zinc-950 px-4 py-8 text-white">
@@ -731,11 +772,78 @@ export function AdminDashboard() {
               </div>
             )}
 
-            {activeTab === "orders" && (
-              <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6 text-center">
-                <p className="text-zinc-400">Coming in Sprint 2.5.5.</p>
-              </div>
-            )}
+           {activeTab === "orders" && (
+  <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
+    <h3 className="text-lg font-bold">
+      All Orders ({ordersList.length})
+    </h3>
+
+    {ordersLoading ? (
+      <p className="mt-6 text-center text-zinc-500">Loading orders...</p>
+    ) : ordersList.length === 0 ? (
+      <p className="mt-6 text-center text-zinc-500">No orders yet.</p>
+    ) : (
+      <div className="mt-4 overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="text-left text-xs uppercase tracking-wider text-zinc-400 border-b border-zinc-800">
+              <th className="pb-2">Order ID</th>
+              <th className="pb-2">Date</th>
+              <th className="pb-2">Customer</th>
+              <th className="pb-2">Total</th>
+              <th className="pb-2">Status</th>
+              <th className="pb-2">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {ordersList.map((o) => (
+              <tr key={o.id} className="border-b border-zinc-800 last:border-0">
+                <td className="py-3 font-mono text-xs text-zinc-400">
+                  {o.id.slice(0, 8)}...
+                </td>
+                <td className="py-3 text-zinc-400">
+                  {new Date(o.createdAt).toLocaleDateString()}
+                </td>
+                <td className="py-3">
+                  <div className="flex flex-col">
+                    <span className="font-semibold text-white">
+                      {o.userName || 'Unknown'}
+                    </span>
+                    <span className="text-xs text-zinc-500">
+                      {o.userEmail || '—'}
+                    </span>
+                  </div>
+                </td>
+                <td className="py-3 font-semibold text-emerald-400">
+                  €{o.total.toFixed(2)}
+                </td>
+                <td className="py-3">
+                  <span
+                    className={`rounded-full px-2 py-1 text-xs font-bold uppercase ${
+                      o.status === 'paid'
+                        ? 'bg-emerald-400/10 text-emerald-400'
+                        : 'bg-amber-400/10 text-amber-400'
+                    }`}
+                  >
+                    {o.status}
+                  </span>
+                </td>
+                <td className="py-3">
+                  <button
+                    onClick={() => openOrderDetail(o.id)}
+                    className="rounded bg-sky-400/10 px-2 py-1 text-xs font-semibold text-sky-400 hover:bg-sky-400/20"
+                  >
+                    View
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    )}
+  </div>
+)}
           </div>
         </div>
 
@@ -760,6 +868,79 @@ export function AdminDashboard() {
             onSave={handleSaveClass}
           />
         )}
+{(selectedOrder || orderDetailLoading) && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
+    <div className="w-full max-w-2xl rounded-2xl border border-zinc-800 bg-zinc-900 p-6 max-h-[90vh] overflow-y-auto">
+      {orderDetailLoading ? (
+        <div className="flex items-center justify-center py-12">
+          <p className="text-zinc-400">Loading order details...</p>
+        </div>
+      ) : (
+        <>
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-bold text-white">Order Details</h2>
+            <button
+              onClick={() => setSelectedOrder(null)}
+              className="text-zinc-500 hover:text-white"
+              aria-label="Close"
+            >
+              ✕
+            </button>
+          </div>
+
+          <div className="mt-4 space-y-4">
+            <div className="rounded-lg bg-zinc-950 p-3 text-sm">
+              <p className="text-zinc-400">
+                Order ID: <span className="font-mono text-white">{selectedOrder.id}</span>
+              </p>
+              <p className="mt-1 text-zinc-400">
+                Date: <span className="text-white">{new Date(selectedOrder.createdAt).toLocaleString()}</span>
+              </p>
+              <p className="mt-1 text-zinc-400">
+                Status:{' '}
+                <span className={selectedOrder.status === 'paid' ? 'text-emerald-400 font-bold' : 'text-amber-400 font-bold'}>
+                  {selectedOrder.status.toUpperCase()}
+                </span>
+              </p>
+            </div>
+
+            <div className="rounded-lg bg-zinc-950 p-3 text-sm">
+              <p className="text-xs font-bold uppercase tracking-wider text-zinc-500 mb-2">Customer</p>
+              <p className="text-white font-semibold">{selectedOrder.userName || 'Unknown'}</p>
+              <p className="text-zinc-400">{selectedOrder.userEmail || '—'}</p>
+            </div>
+
+            <div>
+              <p className="text-xs font-bold uppercase tracking-wider text-zinc-500 mb-2">Line Items</p>
+              <div className="space-y-2">
+                {selectedOrder.items?.map((item) => (
+                  <div
+                    key={item.id}
+                    className="flex items-center justify-between rounded-lg bg-zinc-950 p-3 text-sm"
+                  >
+                    <span className="text-white">{item.name}</span>
+                    <span className="text-emerald-400 font-semibold">
+                      €{item.price.toFixed(2)}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between rounded-lg bg-emerald-400/10 border border-emerald-400/20 p-3">
+              <span className="text-sm font-bold text-zinc-300">Total</span>
+              <span className="text-xl font-bold text-emerald-400">
+                €{selectedOrder.total.toFixed(2)}
+              </span>
+            </div>
+          </div>
+        </>
+      )}
+    </div>
+  </div>
+)}
+
+
       </div>
     </section>
   );
