@@ -1,6 +1,8 @@
 // client/src/App.jsx
+
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { IntroAnimation } from './components/IntroAnimation';
 import { Header } from "./components/Header";
 import { Hero } from "./components/Hero";
 import { About } from "./components/About";
@@ -14,10 +16,10 @@ import { Signup } from "./pages/Signup";
 import { ForgotPassword } from "./pages/ForgotPassword";
 import { ResetPassword } from "./pages/ResetPassword";
 import { useLocation } from "react-router-dom";
-import { useEffect } from "react";
 import { Success } from "./pages/Success";
 import { MemberDashboard } from "./pages/MemberDashboard";
 import { AdminDashboard } from './pages/AdminDashboard';
+
 function ScrollToHash() {
   const location = useLocation()
   const [isScrolling, setIsScrolling] = useState(false)
@@ -115,8 +117,22 @@ function HomePage() {
 }
 
 function App() {
+
+  // Lazy initializer: reads sessionStorage once on mount.
+  // Avoids the useEffect warning and prevents a double render.
+  const [showIntro, setShowIntro] = useState(() => {
+    return !sessionStorage.getItem('hasSeenIntro');
+  });
+
+  function handleIntroFinish() {
+    sessionStorage.setItem('hasSeenIntro', 'true');
+    setShowIntro(false);
+  }
+
+
   return (
     <BrowserRouter>
+    {showIntro && <IntroAnimation onFinish={handleIntroFinish} />}
       <ScrollToHash />
       <div className="min-h-screen bg-zinc-950 text-white">
         <Header />
