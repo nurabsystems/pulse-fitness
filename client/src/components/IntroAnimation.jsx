@@ -1,19 +1,17 @@
 // client/src/components/IntroAnimation.jsx
-// Cinematic splash screen using your custom gym video.
-// Plays a 15-second intro, then dissolves into the homepage.
-
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect, useRef } from 'react';
 
 export function IntroAnimation({ onFinish }) {
   const [isVisible, setIsVisible] = useState(true);
+  const [isMuted, setIsMuted] = useState(true); // Start muted to allow autoplay
   const videoRef = useRef(null);
 
   useEffect(() => {
-    // Auto-dismiss after 15 seconds
+    // Auto-dismiss timer (matches your duration)
     const timer = setTimeout(() => {
       setIsVisible(false);
-      setTimeout(onFinish, 1000); // 1s exit fade
+      setTimeout(onFinish, 1000);
     }, 28100);
 
     return () => clearTimeout(timer);
@@ -27,6 +25,13 @@ export function IntroAnimation({ onFinish }) {
     setTimeout(onFinish, 500);
   }
 
+  function toggleAudio() {
+    if (videoRef.current) {
+      videoRef.current.muted = !videoRef.current.muted;
+      setIsMuted(videoRef.current.muted);
+    }
+  }
+
   return (
     <AnimatePresence>
       {isVisible && (
@@ -36,11 +41,11 @@ export function IntroAnimation({ onFinish }) {
           transition={{ duration: 1, ease: 'easeInOut' }}
           className="fixed inset-0 z-[9999] flex items-center justify-center bg-black overflow-hidden"
         >
-          {/* Your custom gym video — muted required for autoplay */}
+          {/* Video element (muted initially for autoplay compliance) */}
           <video
             ref={videoRef}
             autoPlay
-            muted
+            muted={isMuted}
             playsInline
             loop={false}
             className="absolute inset-0 h-full w-full object-cover opacity-60"
@@ -70,6 +75,32 @@ export function IntroAnimation({ onFinish }) {
               Train Smart. Live Strong.
             </motion.p>
           </div>
+
+          {/* Audio Toggle Button */}
+          <motion.button
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1 }}
+            onClick={toggleAudio}
+            className="absolute bottom-8 left-8 z-20 flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 text-white text-sm font-medium backdrop-blur-md transition"
+          >
+            {isMuted ? (
+              <>
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
+                </svg>
+                Unmute Sound
+              </>
+            ) : (
+              <>
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                </svg>
+                Mute Sound
+              </>
+            )}
+          </motion.button>
 
           {/* Skip button */}
           <motion.button
