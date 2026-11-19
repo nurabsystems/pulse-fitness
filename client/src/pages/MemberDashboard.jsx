@@ -1,13 +1,14 @@
 // client/src/pages/MemberDashboard.jsx
 // This is the dashboard where a logged-in user can manage their profile.
 
-import { useEffect, useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useSession } from '../lib/auth-client';
+import { useEffect, useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import { useSession } from "../lib/auth-client";
 
 // The Server or Backend API URL. It uses the environment variable if available.
 // If not, it falls back to the live Render backend for production.
-const API_URL = import.meta.env.VITE_API_URL || 'https://pulse-fitness-y1fa.onrender.com/api';
+const API_URL =
+  import.meta.env.VITE_API_URL || "https://pulse-fitness-y1fa.onrender.com/api";
 
 export function MemberDashboard() {
   // 1. Get the current session (to know who is logged in).
@@ -16,13 +17,14 @@ export function MemberDashboard() {
 
   // 2. State for the user's profile data.
   const [profile, setProfile] = useState(null);
-  const [name, setName] = useState('');
-  const [bio, setBio] = useState('');
+  const [latestOrder, setLatestOrder] = useState(null); // State for the latest order (if any).
+  const [name, setName] = useState("");
+  const [bio, setBio] = useState("");
 
   // 3. State for UI feedback.
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
 
   // 4. A reference to the hidden file input (for avatar upload).
   const fileInputRef = useRef(null);
@@ -30,7 +32,7 @@ export function MemberDashboard() {
   // 5. If the user is not logged in, redirect them to the login page.
   useEffect(() => {
     if (!isPending && !session?.user) {
-      navigate('/login?redirect=/dashboard');
+      navigate("/login?redirect=/dashboard");
     }
   }, [session, isPending, navigate]);
 
@@ -39,19 +41,54 @@ export function MemberDashboard() {
     async function fetchProfile() {
       try {
         const res = await fetch(`${API_URL}/users/me`, {
-          credentials: 'include', // This sends the session cookie.
+          credentials: "include", // This sends the session cookie.
         });
         const data = await res.json();
 
         if (data.user) {
           setProfile(data.user);
-          setName(data.user.name || '');
-          setBio(data.user.bio || '');
+          setName(data.user.name || "");
+          setBio(data.user.bio || "");
         }
       } catch (err) {
-        console.error('Failed to fetch profile:', err);
+        console.error("Failed to fetch profile:", err);
       } finally {
         setLoading(false); // Stop the loading spinner.
+      }
+    }
+
+    if (session?.user) {
+      fetchProfile();
+    }
+  }, [session]);
+
+  // 6. When the page loads, fetch the user's profile from the backend.
+  useEffect(() => {
+    async function fetchProfile() {
+      try {
+        // Fetch Profile
+        const res = await fetch(`${API_URL}/users/me`, {
+          credentials: "include",
+        });
+        const data = await res.json();
+        if (data.user) {
+          setProfile(data.user);
+          setName(data.user.name || "");
+          setBio(data.user.bio || "");
+        }
+
+        // Fetch Latest Order (ADD THIS BLOCK)
+        const orderRes = await fetch(`${API_URL}/orders/latest`, {
+          credentials: "include",
+        });
+        const orderData = await orderRes.json();
+        if (orderData.order) {
+          setLatestOrder(orderData.order);
+        }
+      } catch (err) {
+        console.error("Failed to fetch dashboard data:", err);
+      } finally {
+        setLoading(false);
       }
     }
 
@@ -64,13 +101,13 @@ export function MemberDashboard() {
   async function handleSaveProfile(e) {
     e.preventDefault();
     setSaving(true);
-    setMessage('');
+    setMessage("");
 
     try {
       const res = await fetch(`${API_URL}/users/me`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include', // Send the cookie.
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include", // Send the cookie.
         body: JSON.stringify({ name, bio }),
       });
 
@@ -78,11 +115,11 @@ export function MemberDashboard() {
 
       if (data.user) {
         setProfile(data.user);
-        setMessage('Profile updated successfully!');
+        setMessage("Profile updated successfully!");
       }
     } catch (err) {
-      console.error('Failed to update profile:', err);
-      setMessage('Failed to update profile. Please try again.');
+      console.error("Failed to update profile:", err);
+      setMessage("Failed to update profile. Please try again.");
     } finally {
       setSaving(false);
     }
@@ -94,12 +131,12 @@ export function MemberDashboard() {
     if (!file) return;
 
     const formData = new FormData();
-    formData.append('avatar', file); // 'avatar' must match the backend field name.
+    formData.append("avatar", file); // 'avatar' must match the backend field name.
 
     try {
       const res = await fetch(`${API_URL}/users/me/avatar`, {
-        method: 'POST',
-        credentials: 'include',
+        method: "POST",
+        credentials: "include",
         body: formData, // No 'Content-Type' header! FormData sets it automatically.
       });
 
@@ -107,11 +144,11 @@ export function MemberDashboard() {
 
       if (data.user) {
         setProfile(data.user);
-        setMessage('Avatar updated successfully!');
+        setMessage("Avatar updated successfully!");
       }
     } catch (err) {
-      console.error('Failed to upload avatar:', err);
-      setMessage('Failed to upload avatar. Please try again.');
+      console.error("Failed to upload avatar:", err);
+      setMessage("Failed to upload avatar. Please try again.");
     }
   }
 
@@ -129,7 +166,9 @@ export function MemberDashboard() {
     <section className="min-h-screen bg-zinc-950 px-4 py-12 text-white">
       <div className="max-w-4xl mx-auto">
         <h1 className="text-3xl font-bold">My Dashboard</h1>
-        <p className="mt-2 text-zinc-400">Manage your profile and account settings.</p>
+        <p className="mt-2 text-zinc-400">
+          Manage your profile and account settings.
+        </p>
 
         <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* --- Left Sidebar: Avatar and User Info --- */}
@@ -142,10 +181,10 @@ export function MemberDashboard() {
                     profile?.image ||
                     // If no avatar is uploaded, generate a nice placeholder using the user's initials.
                     `https://ui-avatars.com/api/?name=${encodeURIComponent(
-                      profile?.name || 'User'
+                      profile?.name || "User",
                     )}&background=10b981&color=fff&size=128`
                   }
-                  alt={profile?.name || 'User'}
+                  alt={profile?.name || "User"}
                   className="h-24 w-24 rounded-full object-cover border-2 border-emerald-400"
                 />
 
@@ -174,15 +213,37 @@ export function MemberDashboard() {
 
               {/* Role Badge */}
               <span className="mt-2 inline-block rounded-full bg-emerald-400/10 px-3 py-1 text-xs font-bold uppercase tracking-wide text-emerald-400">
-                {profile?.role || 'Member'}
+                {profile?.role || "Member"}
               </span>
+
+              {/* --- RENEWAL REMINDER BLOCK --- */}
+              {latestOrder && latestOrder.renewsAt && (
+                <div className="mt-6 w-full rounded-xl border border-emerald-500/20 bg-emerald-500/10 p-4 text-center">
+                  <p className="text-xs font-semibold text-emerald-400 uppercase tracking-wider mb-1">
+                    Active Plan
+                  </p>
+                  <p className="text-sm text-zinc-300">
+                    Renews on{" "}
+                    {new Date(latestOrder.renewsAt).toLocaleDateString("en-GB")}
+                  </p>
+                  <p className="text-xs text-zinc-400 mt-1">
+                    {Math.ceil(
+                      (new Date(latestOrder.renewsAt) - new Date()) /
+                        (1000 * 60 * 60 * 24),
+                    )}{" "}
+                    days remaining
+                  </p>
+                </div>
+              )}
             </div>
           </aside>
 
           {/* --- Right Side: Profile Edit Form --- */}
           <div className="md:col-span-2 rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
             <h3 className="text-xl font-bold">Edit Profile</h3>
-            <p className="mt-1 text-sm text-zinc-400">Update your personal details below.</p>
+            <p className="mt-1 text-sm text-zinc-400">
+              Update your personal details below.
+            </p>
 
             {/* Success / Error Message */}
             {message && (
@@ -194,7 +255,9 @@ export function MemberDashboard() {
             <form onSubmit={handleSaveProfile} className="mt-6 space-y-4">
               {/* Name field */}
               <div>
-                <label className="block text-sm font-semibold text-zinc-300">Name</label>
+                <label className="block text-sm font-semibold text-zinc-300">
+                  Name
+                </label>
                 <input
                   type="text"
                   value={name}
@@ -206,10 +269,12 @@ export function MemberDashboard() {
 
               {/* Email field (disabled) */}
               <div>
-                <label className="block text-sm font-semibold text-zinc-300">Email</label>
+                <label className="block text-sm font-semibold text-zinc-300">
+                  Email
+                </label>
                 <input
                   type="email"
-                  value={profile?.email || ''}
+                  value={profile?.email || ""}
                   disabled
                   className="mt-1 w-full rounded-lg border border-zinc-700 bg-zinc-800 px-4 py-2.5 text-zinc-500 outline-none cursor-not-allowed"
                 />
@@ -217,7 +282,9 @@ export function MemberDashboard() {
 
               {/* Bio field */}
               <div>
-                <label className="block text-sm font-semibold text-zinc-300">Bio</label>
+                <label className="block text-sm font-semibold text-zinc-300">
+                  Bio
+                </label>
                 <textarea
                   value={bio}
                   onChange={(e) => setBio(e.target.value)}
@@ -233,7 +300,7 @@ export function MemberDashboard() {
                 disabled={saving}
                 className="rounded-full bg-emerald-400 px-6 py-2.5 text-sm font-semibold text-black transition hover:bg-emerald-500 disabled:opacity-50"
               >
-                {saving ? 'Saving...' : 'Save Changes'}
+                {saving ? "Saving..." : "Save Changes"}
               </button>
             </form>
           </div>
