@@ -107,8 +107,10 @@ export const orders = pgTable('orders', {
   userId: text('user_id').notNull(), // references Better Auth user
   status: text('status').notNull().default('pending'), // 'pending' or 'paid'
   total: integer('total').notNull(), // in cents
+  renewsAt: timestamp('renews_at'), // timestamp for when the order renews (if applicable)
   createdAt: timestamp('created_at').defaultNow().notNull(),
 });
+
 
 // --- ORDER ITEMS ---
 export const orderItems = pgTable('order_items', {
@@ -117,4 +119,15 @@ export const orderItems = pgTable('order_items', {
   pricingId: uuid('pricing_id').notNull(),
   name: text('name').notNull(), // name of the pricing option
   price: integer('price').notNull(), // in cents
+});
+
+
+// --- NOTIFICATIONS ---
+export const notifications = pgTable('notifications', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  userId: text('user_id').notNull(),
+  title: text('title').notNull(),
+  message: text('message').notNull(),
+  read: boolean('read').notNull().default(false),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
 });
