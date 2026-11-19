@@ -4,6 +4,7 @@
 import { useState } from "react";
 import { useSession, signOut } from "../lib/auth-client";
 import { Link } from "react-router-dom";
+import { NotificationBell } from "./NotificationBell"; // Import at top
 
 const links = [
   { href: "#hero", label: "Home" },
@@ -85,6 +86,9 @@ export function Header() {
                   Admin
                 </Link>
               )}
+
+              {/* Notification Bell */}
+              <NotificationBell />
 
               {/* Sign Out */}
               <button

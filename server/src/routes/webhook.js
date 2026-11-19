@@ -3,7 +3,7 @@ import { Resend } from "resend";
 import express from "express";
 import Stripe from "stripe";
 import { db } from "../db/index.js";
-import { orders, orderItems, user } from "../db/schema.js";
+import { orders, orderItems, user, notifications } from "../db/schema.js";
 import { eq } from "drizzle-orm";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -89,7 +89,14 @@ router.post(
 
         console.log("👤 Customer fetched:", customer?.email || "NONE");
 
-        // 5. Send email
+      // 5. Create notification
+      await db.insert(notifications).values({
+        userId: order.userId,
+        title: 'Order Confirmed',
+        message: `Your order #${orderId.slice(0, 8)} is confirmed. Thank you for your purchase!`,
+      });
+
+        // 6. Send email receipt using Resend
         if (!customer?.email) {
           console.log("❌ No customer email — skipping receipt");
         } else {

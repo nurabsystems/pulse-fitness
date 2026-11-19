@@ -36,33 +36,7 @@ export function MemberDashboard() {
     }
   }, [session, isPending, navigate]);
 
-  // 6. When the page loads, fetch the user's profile from the backend.
-  useEffect(() => {
-    async function fetchProfile() {
-      try {
-        const res = await fetch(`${API_URL}/users/me`, {
-          credentials: "include", // This sends the session cookie.
-        });
-        const data = await res.json();
-
-        if (data.user) {
-          setProfile(data.user);
-          setName(data.user.name || "");
-          setBio(data.user.bio || "");
-        }
-      } catch (err) {
-        console.error("Failed to fetch profile:", err);
-      } finally {
-        setLoading(false); // Stop the loading spinner.
-      }
-    }
-
-    if (session?.user) {
-      fetchProfile();
-    }
-  }, [session]);
-
-  // 6. When the page loads, fetch the user's profile from the backend.
+  // 6. Fetch the user's profile and latest order when the component mounts or when the session changes.
   useEffect(() => {
     async function fetchProfile() {
       try {
@@ -77,7 +51,7 @@ export function MemberDashboard() {
           setBio(data.user.bio || "");
         }
 
-        // Fetch Latest Order (ADD THIS BLOCK)
+        // Fetch Latest Order
         const orderRes = await fetch(`${API_URL}/orders/latest`, {
           credentials: "include",
         });
@@ -233,6 +207,35 @@ export function MemberDashboard() {
                     )}{" "}
                     days remaining
                   </p>
+                </div>
+              )}
+
+              {latestOrder && latestOrder.renewsAt && (
+                <div className="mt-6 w-full rounded-xl border border-emerald-500/20 bg-emerald-500/10 p-4 text-center">
+                  <p className="text-xs font-semibold text-emerald-400 uppercase tracking-wider mb-1">
+                    Active Plan
+                  </p>
+                  <p className="text-sm text-zinc-300">
+                    Renews on{" "}
+                    {new Date(latestOrder.renewsAt).toLocaleDateString("en-GB")}
+                  </p>
+                  <p className="text-xs text-zinc-400 mt-1 mb-3">
+                    {Math.ceil(
+                      (new Date(latestOrder.renewsAt) - new Date()) /
+                        (1000 * 60 * 60 * 24),
+                    )}{" "}
+                    days remaining
+                  </p>
+
+                  {/* --- ADD DOWNLOAD BUTTON HERE --- */}
+                  <a
+                    href={`${API_URL}/orders/${latestOrder.id}/invoice`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-block w-full rounded-lg bg-emerald-500 px-4 py-2 text-xs font-bold text-black transition hover:bg-emerald-400"
+                  >
+                    Download Invoice
+                  </a>
                 </div>
               )}
             </div>

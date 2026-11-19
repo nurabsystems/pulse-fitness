@@ -15,6 +15,7 @@ import { webhookRouter } from './routes/webhook.js';
 import { ordersRouter } from './routes/orders.js';
 import { usersRouter } from './routes/users.js';
 import { adminRouter } from './routes/admin.js';
+import { notificationsRouter } from './routes/notifications.js';
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -81,6 +82,7 @@ app.use('/api/checkout', checkoutRouter);
 app.use('/api/orders', ordersRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/admin', adminRouter);
+app.use('/api/notifications', notificationsRouter);
 
 // =========================================================
 // 6. 404 Fallback
